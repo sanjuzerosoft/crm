@@ -1,0 +1,24 @@
+
+.main_sidebar {
+    transition: width 0.3s ease-in-out;
+}
+
+img {
+    transition: opacity 0.2s ease;
+}
+
+@media (max-width: 1023px) {
+    .menu_icon {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.back{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.main_side{
+    background-color: #EDF4F8;
+}

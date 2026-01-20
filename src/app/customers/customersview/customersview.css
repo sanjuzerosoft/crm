@@ -1,0 +1,118 @@
+.wrapper {
+  background: #f5f7fb;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* Header */
+.header-container {
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.05);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn.back {
+  background: #e5e7eb;
+  color: #111;
+}
+
+.btn.edit {
+  background: #cd1c18;
+  color: #fff;
+}
+
+.btn.edit:hover {
+  background: #FF4D4D;
+}
+
+/* Layout */
+.view-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Cards */
+.card {
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.04);
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #111827;
+}
+
+/* Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.info-grid div span {
+  display: block;
+  font-size: 12px;
+  color: #7b8495;
+  margin-bottom: 5px;
+}
+
+.info-grid div p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Description */
+.description-box {
+  margin-top: 24px;
+}
+
+.description-box span {
+  font-size: 12px;
+  color: #7b8495;
+}
+
+.description-box p {
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 8px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .view-layout {
+    grid-template-columns: 1fr;
+  }
+}

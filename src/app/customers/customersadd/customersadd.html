@@ -1,0 +1,123 @@
+<div class="wrapper">
+  <!-- HEADER -->
+  <div class="container header-container">
+    <div class="header">
+      <h1>Add Customer</h1>
+    </div>
+    
+    <!-- ACTIONS BELOW HEADER -->
+    <div class="form-actions">
+      <button type="button" class="btn back" (click)="goBack()">Back</button>
+      
+      <div class="right-actions">
+        <button type="button" class="btn clear" (click)="clearForm()" *ngIf="!customerId">Clear</button>
+        <button type="submit" form="customerForm" class="btn save" [disabled]="customerForm.invalid">
+          {{ customerId ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form id="customerForm" #customerForm="ngForm" (ngSubmit)="customerId? updateCustomer(customerId): saveCustomer()">
+    <!-- TWO COLUMN LAYOUT -->
+    <div class="form-layout">
+      <!-- LEFT -->
+      <div class="container left-container">
+        <h3 class="card-title">Customer Details</h3>
+
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" name="first_name" [(ngModel)]="customer.first_name" required />
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Last Name</label>
+
+
+            
+            <input type="text" name="last_name" [(ngModel)]="customer.last_name" required />
+          </div>
+
+          <div class="form-group">
+            <label>customer Assignee</label>
+            <input type="text" name="customer_assignee" [(ngModel)]="customer.customer_assignee" />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" [(ngModel)]="customer.email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Mobile</label>
+            <input type="text" name="mobile" [(ngModel)]="customer.mobile" required />
+          </div>
+
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" name="company_name" [(ngModel)]="customer.company_name" />
+          </div>
+
+          <div class="form-group">
+            <label>Industry Type</label>
+            <input type="text" name="industry_type" [(ngModel)]="customer.industry_type" />
+          </div>
+
+          <div class="form-group">
+            <label>customer Source</label>
+            <input type="text" name="customer_source" [(ngModel)]="customer.customer_source" />
+          </div>
+
+          <div class="form-group">
+            <label>Website</label>
+            <input type="text" name="website" [(ngModel)]="customer.website" />
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="container right-container">
+        <h3 class="card-title">Address</h3>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Door No</label>
+            <input type="text" name="door_no" [(ngModel)]="customer.door_no" />
+          </div>
+
+          <div class="form-group">
+            <label>Street</label>
+            <input type="text" name="street" [(ngModel)]="customer.street" />
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" [(ngModel)]="customer.city" />
+          </div>
+
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" name="state" [(ngModel)]="customer.state" />
+          </div>
+
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" name="country" [(ngModel)]="customer.country" />
+          </div>
+
+          <div class="form-group">
+            <label>Zip Code</label>
+            <input type="text" name="zip_code" [(ngModel)]="customer.zip_code" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" [(ngModel)]="customer.description"></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

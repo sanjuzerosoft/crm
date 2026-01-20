@@ -1,0 +1,56 @@
+<div class="wrapper">
+  <!-- HEADER -->
+  <div class="container header-container">
+    <div class="header">
+      <h1>Lead Details</h1>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn back" (click)="goBack()">Back</button>
+      <button class="btn edit"  (click)="goToEdit()">Edit</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="view-layout">
+
+    <!-- LEFT -->
+    <div class="container card">
+      <h3 class="card-title">Basic Information</h3>
+
+      <div class="info-grid">
+        <div><span>First Name</span><p>{{leads?.first_name}}</p></div>
+        <div><span>Last Name</span><p>{{ leads?.last_name }}</p></div>
+        <div><span>Email</span><p>{{ leads?.email }}</p></div>
+        <div><span>Mobile</span><p>{{ leads?.mobile }}</p></div>
+        <div><span>Company</span><p>{{ leads?.company_name }}</p></div>
+        <div><span>Industry</span><p>{{ leads?.industry_type }}</p></div>
+        <div><span>Assignee</span><p>{{ leads?.lead_assignee }}</p></div>
+        <div><span>Source</span><p>{{ leads?.lead_source }}</p></div>
+        <div><span>Website</span><p>{{ leads?.website }}</p></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="container card">
+      <h3 class="card-title">Address</h3>
+
+      <div class="info-grid">
+        <div><span>Door No</span><p>{{ leads?.street  }}</p></div>
+        <div><span>Street</span><p>{{ leads?.street  }}</p></div>
+        <div><span>City</span><p>{{ leads?.city  }}</p></div>
+        <div><span>State</span><p>{{ leads?.state  }}</p></div>
+        <div><span>Country</span><p>{{ leads?.country  }}</p></div>
+        <div><span>Zip Code</span><p>{{ leads?.zip_code  }}</p></div>
+      </div>
+
+      <div class="description-box">
+        <span>Description</span>
+        <p>
+          {{ leads?.description }}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

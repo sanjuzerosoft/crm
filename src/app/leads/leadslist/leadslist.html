@@ -1,0 +1,80 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="header">
+      <!-- Page Header -->
+      <div>
+        <div class="page-title">
+          Leads List - <span class="count">({{ totalLeads }})</span>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div>
+        <div class="toolbar">
+          <div class="search-box">
+            <img src="search.png" alt="Search" class="search-icon" />
+            <!-- <input type="text" placeholder="Search leads..." /> -->
+            <input
+              type="text"
+              placeholder="Search leads..."
+              [(ngModel)]="searchText"
+              (input)="onSearch()"
+            />
+          </div>
+
+          <button class="add-btn" (click)="AddLeads()">
+            <img src="add.png" alt="Add" class="btn-icon" />
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+      <table class="leads-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Lead Asignee</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let lead of leads" (click)="viewLead(lead.id)" class="clickable-row">
+            <td>{{ lead.id }}</td>
+            <td>{{ lead.first_name }}</td>
+            <td>{{ lead.email }}</td>
+            <td>{{ lead.mobile }}</td>
+            <td>{{ lead.lead_assignee }}</td>
+
+            <td class="actions">
+              <img src="edit.png" class="action-icon" (click)="editLead(lead.id)" />
+              <!-- <img src="delete.png" class="action-icon delete" (click)="deleteLead(lead.id)" /> -->
+              <img
+                src="delete.png"
+                class="action-icon delete"
+                (click)="openDeletePopup(lead.id); $event.stopPropagation()"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-backdrop" *ngIf="showDeletePopup">
+        <div class="modal">
+          <h3>Confirm Delete</h3>
+          <p>Are you sure you want to delete this lead?</p>
+
+          <div class="modal-actions">
+            <button class="btn cancel" (click)="closeDeletePopup()">No</button>
+            <button class="btn delete" (click)="confirmDelete()">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

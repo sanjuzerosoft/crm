@@ -1,0 +1,72 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="page-title">customers List - <span class="count">({{ totalcustomers }})</span></div>
+      </div>
+
+      <div>
+        <div class="toolbar">
+          <div class="search-box">
+            <img src="search.png" alt="Search" class="search-icon" />
+            <input type="text" placeholder="Search customers..." />
+          </div>
+
+          <button class="add-btn" (click)="AddCustomers()">
+            <img src="add.png" alt="Add" class="btn-icon" />
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="customers-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+
+            
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Lead Asignee</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let customer of customers" (click)="viewCustomer(customer.id)" class="clickable-row">
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.first_name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.mobile }}</td>
+            <td>
+
+
+              <span class="status active">{{ customer.status }}</span>
+            </td>
+            <td class="actions">
+              <img src="edit.png" alt="Edit" class="action-icon" (click)="editCustomer(customer.id)" />
+
+              <img src="delete.png" alt="Delete" class="action-icon delete"
+                (click)="openDeletePopup(customer.id); $event.stopPropagation()"
+                />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-backdrop" *ngIf="showDeletePopup">
+        <div class="modal">
+          <h3>Confirm Delete</h3>
+          <p>Are you sure you want to delete this lead?</p>
+
+          <div class="modal-actions">
+            <button class="btn cancel" (click)="closeDeletePopup()">No</button>
+            <button class="btn delete" (click)="confirmDelete()">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

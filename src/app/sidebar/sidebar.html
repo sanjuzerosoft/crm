@@ -1,0 +1,83 @@
+<div
+  class="main_side min-h-screen h-full transition-all duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.18)]"
+  [ngClass]="{
+    'w-20 p-3': isCollapsed,
+    'w-64 xl:w-72 p-5': !isCollapsed
+  }"
+>
+  <!-- Top Section -->
+  <div class="relative flex items-center justify-between">
+    <!-- Welcome Text -->
+    <div
+      class="text-black text-2xl font-semibold text-center mt-5 transition-opacity duration-300"
+      [ngClass]="{ 'hidden': isCollapsed }"
+    >
+      Welcome Admin!
+    </div>
+
+    <!-- Toggle Button -->
+    <button
+      (click)="toggleSidebar()"
+      class="flex justify-center mt-5 mx-auto cursor-pointer"
+    >
+      <img
+        [src]="isCollapsed ? 'rightarrow.png' : 'leftarrow.png'"
+        class="h-8 w-auto"
+        alt="Toggle Sidebar"
+      />
+    </button>
+  </div>
+
+  <!-- Menu -->
+  <div class="flex flex-col gap-2 mt-8">
+    <!-- Dashboard -->
+    <div
+      routerLink="/dashboard"
+      routerLinkActive="bg-[#cd1c18] text-white"
+      class="flex items-center justify-center lg:justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+    >
+      <img src="dashboard.png" class="h-6 w-6" />
+      <span [ngClass]="{ 'hidden': isCollapsed }">Dashboard</span>
+    </div>
+
+    <!-- Leads -->
+    <div
+      routerLink="/leads"
+      routerLinkActive="bg-[#cd1c18] text-white"
+      class="flex items-center justify-center lg:justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+    >
+      <img src="leads.png" class="h-6 w-6" />
+      <span [ngClass]="{ 'hidden': isCollapsed }">Leads</span>
+    </div>
+
+    <!-- Customers -->
+    <div
+      routerLink="/customers"
+      routerLinkActive="bg-[#cd1c18] text-white"
+      class="flex items-center justify-center lg:justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+    >
+      <img src="customers.png" class="h-6 w-6" />
+      <span [ngClass]="{ 'hidden': isCollapsed }">Customers</span>
+    </div>
+
+    <!-- Activities -->
+    <div
+      routerLink="/activities"
+      routerLinkActive="bg-[#cd1c18] text-white"
+      class="flex items-center justify-center lg:justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+    >
+      <img src="activities.png" class="h-6 w-6" />
+      <span [ngClass]="{ 'hidden': isCollapsed }">Activities</span>
+    </div>
+
+    <!-- Reports -->
+    <div
+      routerLink="/reports"
+      routerLinkActive="bg-[#cd1c18] text-white"
+      class="flex items-center justify-center lg:justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+    >
+      <img src="reports.png" class="h-6 w-6" />
+      <span [ngClass]="{ 'hidden': isCollapsed }">Reports</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="dashboard">
+
+  <div class="card">
+    <div class="title">Total Leads</div>
+    <div class="count">{{ totalLeads }}</div>
+    <canvas id="totalLeads"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="title">Total Customers</div>
+    <div class="count">{{ totalCustomers }}</div>
+    <canvas id="totalCustomers"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="title">Leads Status</div>
+    <div class="count">
+      {{ activeLeads }} Active / {{ inactiveLeads }} Inactive
+    </div>
+    <canvas id="leadsStatus"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="title">Customers Status</div>
+    <div class="count">
+      {{ activeCustomers }} Active / {{ inactiveCustomers }} Inactive
+    </div>
+    <canvas id="customersStatus"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="title">Leads by Month</div>
+    <div class="count">Total: {{ totalLeadsByMonth }}</div>
+    <canvas id="leadsMonth"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="title">Customers by Month</div>
+    <div class="count">Total: {{ totalCustomersByMonth }}</div>
+    <canvas id="customersMonth"></canvas>
+  </div>
+
+  <div class="card full-width">
+    <div class="title">Leads vs Customers</div>
+    <div class="count">
+      Difference:
+      {{ totalLeadsByMonth - totalCustomersByMonth }}
+    </div>
+    <canvas id="leadsVsCustomers"></canvas>
+  </div>
+
+</div>

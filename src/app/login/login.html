@@ -1,0 +1,55 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <div class="header">
+      <h1>Welcome to ZeroSoft CRM</h1>
+      <p class="subtitle">Your Admin Dashboard</p>
+    </div>
+    <form class="login-form">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          [(ngModel)]="email"
+          name="email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="Enter your password"
+          [(ngModel)]="password"
+          name="password"
+        />
+      </div>
+      <div class="form-options">
+        <label class="checkbox-container">
+          <input
+            type="checkbox"
+            [(ngModel)]="rememberDevice"
+            name="remember"
+          />
+          <span>Remember this Device</span>
+        </label>
+        <a href="#" class="forgot-link" (click)="forgotPassword(); $event.preventDefault()">
+          Forgot Password ?
+        </a>
+      </div>
+      <button 
+        type="button" 
+        class="btn-signin" 
+        (click)="login()"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? 'Signing In...' : 'Sign In' }}
+      </button>
+      <div class="signup-link">
+        New to ZeroSoft CRM? 
+        <a href="#" (click)="createAccount(); $event.preventDefault()">Create an account</a>
+      </div>
+    </form>
+  </div>
+</div>

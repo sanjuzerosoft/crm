@@ -1,0 +1,120 @@
+<div class="wrapper">
+  <!-- HEADER -->
+  <div class="container header-container">
+    <div class="header">
+      <h1>Add Lead</h1>
+    </div>
+    
+    <!-- ACTIONS BELOW HEADER -->
+    <div class="form-actions">
+      <button type="button" class="btn back" (click)="goBack()">Back</button>
+      
+      <div class="right-actions">
+        <button type="button" class="btn clear" (click)="clearForm()" *ngIf="!leadId">Clear</button>
+        <button type="submit" form="leadForm" class="btn save" [disabled]="leadForm.invalid">
+         {{ leadId ? 'Update' : 'Save' }} 
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form id="leadForm" #leadForm="ngForm" (ngSubmit)=" leadId? updateLead(leadId) : saveLead() ">
+    <!-- TWO COLUMN LAYOUT -->
+    <div class="form-layout">
+      <!-- LEFT -->
+      <div class="container left-container">
+        <h3 class="card-title">Lead Details</h3>
+
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" name="first_name" [(ngModel)]="lead.first_name" required />
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="last_name" [(ngModel)]="lead.last_name" required />
+          </div>
+
+          <div class="form-group">
+            <label>Lead Assignee</label>
+            <input type="text" name="lead_assignee" [(ngModel)]="lead.lead_assignee" />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" [(ngModel)]="lead.email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Mobile</label>
+            <input type="text" name="mobile" [(ngModel)]="lead.mobile" required />
+          </div>
+
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" name="company_name" [(ngModel)]="lead.company_name" />
+          </div>
+
+          <div class="form-group">
+            <label>Industry Type</label>
+            <input type="text" name="industry_type" [(ngModel)]="lead.industry_type" />
+          </div>
+
+          <div class="form-group">
+            <label>Lead Source</label>
+            <input type="text" name="lead_source" [(ngModel)]="lead.lead_source" />
+          </div>
+
+          <div class="form-group">
+            <label>Website</label>
+            <input type="text" name="website" [(ngModel)]="lead.website" />
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="container right-container">
+        <h3 class="card-title">Address</h3>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Door No</label>
+            <input type="text" name="door_no" [(ngModel)]="lead.door_no" />
+          </div>
+
+          <div class="form-group">
+            <label>Street</label>
+            <input type="text" name="street" [(ngModel)]="lead.street" />
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" [(ngModel)]="lead.city" />
+          </div>
+
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" name="state" [(ngModel)]="lead.state" />
+          </div>
+
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" name="country" [(ngModel)]="lead.country" />
+          </div>
+
+          <div class="form-group">
+            <label>Zip Code</label>
+            <input type="text" name="zip_code" [(ngModel)]="lead.zip_code" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" [(ngModel)]="lead.description"></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
