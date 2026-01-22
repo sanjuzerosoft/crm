@@ -11,6 +11,18 @@ body {
   color: #1f2937;
 }
 
+.error small {
+  color: #e53935;
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border: 1px solid #e53935;
+}
+
 /* Wrapper */
 .wrapper {
   min-height: 100vh;
