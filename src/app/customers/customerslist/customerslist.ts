@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Auth } from '../../services/auth';
 @Component({
   selector: 'app-customerslist',
   standalone: true,
@@ -36,22 +37,26 @@ export class Customerslist implements OnInit {
     this.closeDeletePopup();
   }
 
-  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private authService: Auth,
+  ) {}
 
+  getCustomers() {
+    const token = this.authService.getToken();
 
-getCustomers() {
-    // const token =
-    //   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
-    // const headers = new HttpHeaders({
-    //   Authorization: `Bearer ${token}`,
-    // });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
     this.http
-      .get<any[]>('https://crm.api.zerosoft.in/api/customers')
+      .get<any[]>(`${this.authService.apiUrl}/customers`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Error fetching customers:', error);
           return throwError(() => error);
-        })
+        }),
       )
       .subscribe({
         next: (data) => {
@@ -71,7 +76,6 @@ getCustomers() {
   }
 
   //new
-  
 
   onSearch() {
     const value = this.searchText.toLowerCase();
@@ -80,7 +84,7 @@ getCustomers() {
       (item) =>
         item.first_name.toLowerCase().includes(value) ||
         item.email.toLowerCase().includes(value) ||
-        item.mobile.toLowerCase().includes(value)
+        item.mobile.toLowerCase().includes(value),
     );
   }
 
@@ -97,26 +101,25 @@ getCustomers() {
     this.router.navigate(['/customers/view', id]);
   }
 
-  
   viewCustomer(id: number) {
     console.log('Edit customer:', id);
     this.router.navigate(['/customers/view', id]);
   }
 
   deleteCustomer(id: number) {
-    // const token =
-    //   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI0MDEsImV4cCI6MTc2ODMwNjAwMSwibmJmIjoxNzY4MzAyNDAxLCJqdGkiOiJsNlNpaUpmaHhOWTBGREtvIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.dxlQEEqvCf31TbqqJj9QB61E3eRxzNJpIjHBg2nZqMI';
-    // const headers = new HttpHeaders({
-    //   Authorization: `Bearer ${token}`,
-    // });
+    
+    const token = this.authService.getToken();
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
     this.http
-      .delete(`https://crm.api.zerosoft.in/api/customers/${id}`)
+      .delete(`${this.authService.apiUrl}/customers/${id}`,{ headers })
       .pipe(
         catchError((error) => {
           console.error('Delete failed:', error);
           return throwError(() => error);
-        })
+        }),
       )
       .subscribe(() => {
         this.getCustomers();
@@ -124,5 +127,4 @@ getCustomers() {
         this.allCustomers = this.allCustomers.filter((l) => l.id !== id);
       });
   }
-
 }

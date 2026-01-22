@@ -52,8 +52,8 @@ export class Login {
           localStorage.setItem('user', JSON.stringify(response.user));
         }
 
-        alert('Login successful!');
-        this.router.navigate(['/leads']);
+        
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Login error:', error);

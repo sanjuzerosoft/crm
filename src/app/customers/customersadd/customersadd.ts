@@ -5,6 +5,7 @@ import { Router ,ActivatedRoute} from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-customersadd',
@@ -41,7 +42,8 @@ export class Customersadd implements OnInit{
     private router: Router,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+  private authService: Auth
   ) {}
 
   ngOnInit(): void {
@@ -52,14 +54,14 @@ export class Customersadd implements OnInit{
   }
 
   loadCustomerForEdit(id: number) {
-    // const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
-    // const headers = new HttpHeaders({
-    //   Authorization: `Bearer ${token}`,
-    // });
+    
+    const token = this.authService.getToken();
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
     this.http
-      .get<any>(`https://crm.api.zerosoft.in/api/customers/${id}`)
-      // .get<any>(`https://crm.api.zerosoft.in/api/customers/${id}`, { headers })
+      .get<any>(`${this.authService.apiUrl}/customers/${id}`, { headers })
       .subscribe({
         next: (data) => {
           this.customer = data;
@@ -73,10 +75,14 @@ export class Customersadd implements OnInit{
   }
 
   async saveCustomer() {
-    const apiUrl = 'https://crm.api.zerosoft.in/api/customers';
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
     
     try {
-      const response = await firstValueFrom(this.http.post(apiUrl, this.customer));
+      const response = await firstValueFrom(this.http.post(`${this.authService.apiUrl}/customers`, this.customer, { headers }));
       console.log('customer saved successfully:', response);
       this.router.navigate(['/customers']);
     } catch (error) {
@@ -85,16 +91,14 @@ export class Customersadd implements OnInit{
   }
 
   async updateCustomer(customerId: number) {
-    const apiUrl = `https://crm.api.zerosoft.in/api/customers/${customerId}`;
-  //   const token =
-  //   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
+    const token = this.authService.getToken();
 
-  // const headers = new HttpHeaders({
-  //   Authorization: `Bearer ${token}`,
-  // });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
     console.log('Customer saved successfully:', this.customer);
     try {
-      const response = await firstValueFrom(this.http.put(apiUrl, this.customer));
+      const response = await firstValueFrom(this.http.put(`${this.authService.apiUrl}/customers/${customerId}`, this.customer, { headers }));
       // const response = await firstValueFrom(this.http.put(apiUrl, this.customer, { headers }));
       console.log('Customer Updated successfully:', response);
       this.router.navigate(['/customers']);
