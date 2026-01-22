@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'https://crm.api.zerosoft.in/api';
 
   constructor(private http: HttpClient) {}
 

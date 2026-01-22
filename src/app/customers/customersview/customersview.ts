@@ -36,8 +36,8 @@ export class Customersview {
     // });
 
     this.http
-      .get<any>(`http://127.0.0.1:8000/api/customers/${this.customerId}`)
-      // .get<any>(`http://127.0.0.1:8000/api/customers/${this.customerId}`, { headers })
+      .get<any>(`https://crm.api.zerosoft.in/api/customers/${this.customerId}`)
+      // .get<any>(`https://crm.api.zerosoft.in/api/customers/${this.customerId}`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Error fetching customer:', error);

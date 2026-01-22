@@ -11,7 +11,7 @@ import { Customersadd } from './customers/customersadd/customersadd';
 import { Customersview } from './customers/customersview/customersview';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'leads', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
 
@@ -32,7 +32,7 @@ export const routes: Routes = [
     ]
   },
 
-  { path: '**', redirectTo: 'leads' },
+  { path: '**', redirectTo: 'login' },
   
   
 ];

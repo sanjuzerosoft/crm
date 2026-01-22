@@ -46,7 +46,7 @@ getCustomers() {
     //   Authorization: `Bearer ${token}`,
     // });
     this.http
-      .get<any[]>('http://127.0.0.1:8000/api/customers')
+      .get<any[]>('https://crm.api.zerosoft.in/api/customers')
       .pipe(
         catchError((error) => {
           console.error('Error fetching customers:', error);
@@ -108,7 +108,7 @@ getCustomers() {
     // });
 
     this.http
-      .delete(`http://127.0.0.1:8000/api/customers/${id}`)
+      .delete(`https://crm.api.zerosoft.in/api/customers/${id}`)
       .pipe(
         catchError((error) => {
           console.error('Delete failed:', error);

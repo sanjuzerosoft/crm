@@ -48,7 +48,7 @@ export class Leadslist implements OnInit {
     });
     console.log('header', headers);
     this.http
-      .get<any[]>('http://127.0.0.1:8000/api/leads', { headers })
+      .get<any[]>('https://crm.api.zerosoft.in/api/leads', { headers })
       .pipe(
         catchError((error) => {
           console.error('Error fetching leads:', error);
@@ -112,7 +112,7 @@ export class Leadslist implements OnInit {
 
     // Example API call
     this.http
-      .delete(`http://127.0.0.1:8000/api/leads/${id}`, { headers })
+      .delete(`https://crm.api.zerosoft.in/api/leads/${id}`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Delete failed:', error);

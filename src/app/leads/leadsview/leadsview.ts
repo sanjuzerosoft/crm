@@ -36,7 +36,7 @@ export class Leadsview implements OnInit {
     });
 
     this.http
-      .get<any>(`http://127.0.0.1:8000/api/leads/${this.leadId}`, { headers })
+      .get<any>(`https://crm.api.zerosoft.in/api/leads/${this.leadId}`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Error fetching leads:', error);

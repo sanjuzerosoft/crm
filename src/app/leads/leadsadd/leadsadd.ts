@@ -58,7 +58,7 @@ export class Leadsadd implements OnInit {
     });
 
     this.http
-      .get<any>(`http://127.0.0.1:8000/api/leads/${id}`, { headers })
+      .get<any>(`https://crm.api.zerosoft.in/api/leads/${id}`, { headers })
       .subscribe({
         next: (data) => {
           this.lead = data;
@@ -72,7 +72,7 @@ export class Leadsadd implements OnInit {
   }
 
   async saveLead() {
-    const apiUrl = 'http://127.0.0.1:8000/api/leads';
+    const apiUrl = 'https://crm.api.zerosoft.in/api/leads';
     const token =
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
 
@@ -91,7 +91,7 @@ export class Leadsadd implements OnInit {
     }
   }
   async updateLead(leadId: number) {
-    const apiUrl = `http://127.0.0.1:8000/api/leads/${leadId}`;
+    const apiUrl = `https://crm.api.zerosoft.in/api/leads/${leadId}`;
     const token =
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
 

@@ -58,8 +58,8 @@ export class Customersadd implements OnInit{
     // });
 
     this.http
-      .get<any>(`http://127.0.0.1:8000/api/customers/${id}`)
-      // .get<any>(`http://127.0.0.1:8000/api/customers/${id}`, { headers })
+      .get<any>(`https://crm.api.zerosoft.in/api/customers/${id}`)
+      // .get<any>(`https://crm.api.zerosoft.in/api/customers/${id}`, { headers })
       .subscribe({
         next: (data) => {
           this.customer = data;
@@ -73,7 +73,7 @@ export class Customersadd implements OnInit{
   }
 
   async saveCustomer() {
-    const apiUrl = 'http://127.0.0.1:8000/api/customers';
+    const apiUrl = 'https://crm.api.zerosoft.in/api/customers';
     
     try {
       const response = await firstValueFrom(this.http.post(apiUrl, this.customer));
@@ -87,7 +87,7 @@ export class Customersadd implements OnInit{
   }
 
   async updateCustomer(customerId: number) {
-    const apiUrl = `http://127.0.0.1:8000/api/customers/${customerId}`;
+    const apiUrl = `https://crm.api.zerosoft.in/api/customers/${customerId}`;
   //   const token =
   //   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
 
