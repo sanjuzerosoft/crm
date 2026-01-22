@@ -6,6 +6,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-leadsview',
@@ -23,20 +24,20 @@ export class Leadsview implements OnInit {
     private router: Router,
     private route: ActivatedRoute,  //read data from url like("leads/view/5")
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService : Auth
   ) {}
 
   ngOnInit() {
     // ✅ Get ID from URL
     this.leadId = Number(this.route.snapshot.paramMap.get('id'));
-    const token =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI4NTQsImV4cCI6MTc2ODMwNjQ1NCwibmJmIjoxNzY4MzAyODU0LCJqdGkiOiI4d1pSbkVuWDh3RTkxcktBIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.rqfyjI2Dy45vhpipUrY-GqbOX2QTZF4jGwZ76khp2O4';
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
     this.http
-      .get<any>(`https://crm.api.zerosoft.in/api/leads/${this.leadId}`, { headers })
+      .get<any>(`${this.authService.apiUrl}/leads/${this.leadId}`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Error fetching leads:', error);

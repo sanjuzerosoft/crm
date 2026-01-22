@@ -6,6 +6,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-leadslist',
@@ -38,17 +39,22 @@ export class Leadslist implements OnInit {
     this.closeDeletePopup();
   }
 
-  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private router: Router, private http: HttpClient, 
+    private cdr: ChangeDetectorRef,    
+    private authService: Auth
+  ) {}
 
   getLeads() {
-    const token =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzNjkxMjUsImV4cCI6MTc2ODM3MjcyNSwibmJmIjoxNzY4MzY5MTI1LCJqdGkiOiJDeEJRbkVobHR5UGpIWFNBIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.fx3Cf1GtzM7jylScJ6mrxmLuZp9WhV3WmWyNwROuaGg';
+    const token =this.authService.getToken();
+      
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    console.log('header', headers);
+    console.log('header', this.authService.apiUrl);
+    console.log('token', this.authService.getToken());
     this.http
-      .get<any[]>('https://crm.api.zerosoft.in/api/leads', { headers })
+      .get<any[]>(`${this.authService.apiUrl}/leads`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Error fetching leads:', error);
@@ -104,15 +110,14 @@ export class Leadslist implements OnInit {
 
   deleteLead(id: number) {
     console.log('Deleting lead:', id);
-    const token =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmeS1vdHAiLCJpYXQiOjE3NjgzMDI0MDEsImV4cCI6MTc2ODMwNjAwMSwibmJmIjoxNzY4MzAyNDAxLCJqdGkiOiJsNlNpaUpmaHhOWTBGREtvIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.dxlQEEqvCf31TbqqJj9QB61E3eRxzNJpIjHBg2nZqMI';
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
     // Example API call
     this.http
-      .delete(`https://crm.api.zerosoft.in/api/leads/${id}`, { headers })
+      .delete(`${this.authService.apiUrl}/leads/${id}`, { headers })
       .pipe(
         catchError((error) => {
           console.error('Delete failed:', error);

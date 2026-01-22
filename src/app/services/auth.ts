@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'https://crm.api.zerosoft.in/api';
+  readonly  apiUrl = 'http://127.0.0.1:8000/api';
+  // readonly apiUrl = 'https://crm.api.zerosoft.in/api';
 
   constructor(private http: HttpClient) {}
 
@@ -28,6 +29,8 @@ export class Auth {
   // Optional: Save token to localStorage
   saveToken(token: string): void {
     localStorage.setItem('auth_token', token);
+    console.log('Auth Token:', localStorage.getItem('auth_token'));
+
   }
 
   // Optional: Get token from localStorage
