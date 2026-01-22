@@ -70,6 +70,9 @@ getCustomers() {
     this.getCustomers();
   }
 
+  //new
+  
+
   onSearch() {
     const value = this.searchText.toLowerCase();
 
