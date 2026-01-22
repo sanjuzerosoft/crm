@@ -86,8 +86,6 @@ export class Leadsadd implements OnInit {
       this.router.navigate(['/leads']);
     } catch (error) {
       console.error('Error saving lead:', error);
-      // Optionally show user-friendly error message
-      alert('Failed to save lead. Please try again.');
     }
   }
   async updateLead(leadId: number) {
@@ -103,8 +101,6 @@ export class Leadsadd implements OnInit {
       this.router.navigate(['/leads']);
     } catch (error) {
       console.error('Error saving lead:', error);
-      // Optionally show user-friendly error message
-      alert('Failed to save lead. Please try again.');
     }
   }
   

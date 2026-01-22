@@ -17,15 +17,21 @@ import { Auth } from '../services/auth';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+
+  // ==============================
+  // TOTAL GETTERS (USED IN HTML)
+  // ==============================
   get totalLeadsByMonth(): number {
-  return this.leadsByMonth.reduce((sum, val) => sum + val, 0);
-}
+    return this.leadsByMonth.reduce((sum, val) => sum + val, 0);
+  }
 
-get totalCustomersByMonth(): number {
-  return this.customersByMonth.reduce((sum, val) => sum + val, 0);
-}
+  get totalCustomersByMonth(): number {
+    return this.customersByMonth.reduce((sum, val) => sum + val, 0);
+  }
 
-  // ===== API DATA =====
+  // ==============================
+  // API DATA
+  // ==============================
   totalLeads = 0;
   totalCustomers = 0;
 
@@ -35,11 +41,18 @@ get totalCustomersByMonth(): number {
   activeCustomers = 0;
   inactiveCustomers = 0;
 
-  leadsByMonth: number[] = [];
-  customersByMonth: number[] = [];
+  leadsByMonth: number[] = new Array(12).fill(0);
+  customersByMonth: number[] = new Array(12).fill(0);
 
-  // ===== CHART REFERENCES =====
+  // ==============================
+  // CHART REFERENCES
+  // ==============================
   charts: Chart[] = [];
+
+  readonly MONTH_LABELS = [
+    'Jan','Feb','Mar','Apr','May','Jun',
+    'Jul','Aug','Sep','Oct','Nov','Dec'
+  ];
 
   constructor(
     private router: Router,
@@ -74,13 +87,11 @@ get totalCustomersByMonth(): number {
           this.activeCustomers = res.customer_status?.active ?? 0;
           this.inactiveCustomers = res.customer_status?.inactive ?? 0;
 
-          // ---- LAST 6 MONTHS ----
-          this.leadsByMonth = this.mapLast6Months(res.leads_last_6_months);
-          this.customersByMonth = this.mapLast6Months(res.customers_last_6_months);
+          // ---- MONTHLY DATA (12 MONTHS) ----
+          this.leadsByMonth = this.mapMonths(res.leads_last_12_months);
+          this.customersByMonth = this.mapMonths(res.customers_last_12_months);
 
           this.cdr.detectChanges();
-
-          // Render charts AFTER data loads
           this.renderCharts();
         },
         error: (err) => {
@@ -90,16 +101,15 @@ get totalCustomersByMonth(): number {
   }
 
   // ==============================
-  // MAP MONTH DATA
+  // MAP MONTH DATA (JAN–DEC)
   // ==============================
-  mapLast6Months(data: any[]): number[] {
-    const months = ['Jan','Feb','Mar','Apr','May','Jun'];
-    const result = [0, 0, 0, 0, 0, 0];
+  mapMonths(data: any[]): number[] {
+    const result = new Array(12).fill(0);
 
     if (!data) return result;
 
     data.forEach(item => {
-      const index = months.indexOf(item.month);
+      const index = this.MONTH_LABELS.indexOf(item.month);
       if (index !== -1) {
         result[index] = item.count;
       }
@@ -113,7 +123,7 @@ get totalCustomersByMonth(): number {
   // ==============================
   renderCharts() {
 
-    // Destroy old charts (important on reload)
+    // Destroy old charts
     this.charts.forEach(chart => chart.destroy());
     this.charts = [];
 
@@ -169,7 +179,7 @@ get totalCustomersByMonth(): number {
     this.charts.push(new Chart('leadsMonth', {
       type: 'bar',
       data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        labels: this.MONTH_LABELS,
         datasets: [{
           label: 'Leads',
           data: this.leadsByMonth,
@@ -182,7 +192,7 @@ get totalCustomersByMonth(): number {
     this.charts.push(new Chart('customersMonth', {
       type: 'bar',
       data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        labels: this.MONTH_LABELS,
         datasets: [{
           label: 'Customers',
           data: this.customersByMonth,
@@ -195,7 +205,7 @@ get totalCustomersByMonth(): number {
     this.charts.push(new Chart('leadsVsCustomers', {
       type: 'line',
       data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        labels: this.MONTH_LABELS,
         datasets: [
           {
             label: 'Leads',

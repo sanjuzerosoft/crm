@@ -121,7 +121,6 @@ export class Leadslist implements OnInit {
       .pipe(
         catchError((error) => {
           console.error('Delete failed:', error);
-          alert('Unauthorized or failed request');
           return throwError(() => error);
         })
       )

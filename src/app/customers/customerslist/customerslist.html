@@ -2,7 +2,9 @@
   <div class="container">
     <div class="header">
       <div>
-        <div class="page-title">customers List - <span class="count">({{ totalcustomers }})</span></div>
+        <div class="page-title">
+          customers List - <span class="count">({{ totalcustomers }})</span>
+        </div>
       </div>
 
       <div>
@@ -24,34 +26,50 @@
       <table class="customers-table">
         <thead>
           <tr>
-            <th>Id</th>
+            <th>S.No</th>
             <th>Name</th>
 
-            
             <th>Email</th>
             <th>Phone</th>
-            <th>Lead Asignee</th>
+            <th>Customer Status</th>
             <th>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let customer of customers" (click)="viewCustomer(customer.id)" class="clickable-row">
-            <td>{{ customer.id }}</td>
+          <tr
+            *ngFor="let customer of customers;let i = index"
+            (click)="viewCustomer(customer.id)"
+            class="clickable-row"
+          >
+            <td>{{ i + 1 }}</td>
             <td>{{ customer.first_name }}</td>
             <td>{{ customer.email }}</td>
             <td>{{ customer.mobile }}</td>
             <td>
-
-
-              <span class="status active">{{ customer.status }}</span>
+              <span
+                class="status"
+                [ngClass]="{
+                  active: customer.customer_status === 'Active',
+                  danger: customer.customer_status === 'InActive',
+                }"
+                >{{ customer.customer_status }}</span
+              >
             </td>
             <td class="actions">
-              <img src="edit.png" alt="Edit" class="action-icon" (click)="editCustomer(customer.id)" />
+              <img
+                src="edit.png"
+                alt="Edit"
+                class="action-icon"
+                (click)="editCustomer(customer.id)"
+              />
 
-              <img src="delete.png" alt="Delete" class="action-icon delete"
+              <img
+                src="delete.png"
+                alt="Delete"
+                class="action-icon delete"
                 (click)="openDeletePopup(customer.id); $event.stopPropagation()"
-                />
+              />
             </td>
           </tr>
         </tbody>

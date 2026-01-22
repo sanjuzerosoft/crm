@@ -31,17 +31,14 @@ export class Register {
   register() {
     // Validation
     if (!this.fullName || !this.email || !this.password || !this.confirmPassword) {
-      alert('Please fill in all fields');
       return;
     }
 
     if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match');
       return;
     }
 
     if (!this.agreeTerms) {
-      alert('Please agree to the terms and conditions');
       return;
     }
 
@@ -51,7 +48,6 @@ export class Register {
     this.authService.register(this.fullName, this.email, this.password).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
-        alert('Registration successful!');
         this.router.navigate(['/login']);
       },
       error: (error) => {
@@ -60,13 +56,10 @@ export class Register {
         
         // Handle different error scenarios
         if (error.error && error.error.message) {
-          alert(error.error.message);
         } else if (error.error && error.error.errors) {
           // Laravel validation errors
           const errors = Object.values(error.error.errors).flat();
-          alert(errors.join('\n'));
         } else {
-          alert('Registration failed. Please try again.');
         }
       },
       complete: () => {

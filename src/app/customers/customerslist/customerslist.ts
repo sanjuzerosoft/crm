@@ -115,7 +115,6 @@ getCustomers() {
       .pipe(
         catchError((error) => {
           console.error('Delete failed:', error);
-          alert('Unauthorized or failed request');
           return throwError(() => error);
         })
       )

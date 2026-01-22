@@ -81,8 +81,6 @@ export class Customersadd implements OnInit{
       this.router.navigate(['/customers']);
     } catch (error) {
       console.error('Error saving customer:', error);
-      // Optionally show user-friendly error message
-      alert('Failed to save customer. Please try again.');
     }
   }
 
@@ -102,8 +100,6 @@ export class Customersadd implements OnInit{
       this.router.navigate(['/customers']);
     } catch (error) {
       console.error('Error saving customers:', error);
-      // Optionally show user-friendly error message
-      alert('Failed to update customers. Please try again.');
     }
   }
 

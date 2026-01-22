@@ -35,7 +35,7 @@
       <table class="leads-table">
         <thead>
           <tr>
-            <th>Id</th>
+            <th>S.No</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -45,8 +45,8 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let lead of leads" (click)="viewLead(lead.id)" class="clickable-row">
-            <td>{{ lead.id }}</td>
+          <tr *ngFor="let lead of leads;let i=index" (click)="viewLead(lead.id)" class="clickable-row">
+            <td>{{i+1 }}</td>
             <td>{{ lead.first_name }}</td>
             <td>{{ lead.email }}</td>
             <td>{{ lead.mobile }}</td>
