@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 
+
 use App\Models\User;
 use App\Mail\VerificationEmail;
 use App\Mail\OtpEmail;
@@ -96,6 +97,45 @@ class AuthController extends Controller
         ]);
     }
 
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required'
+    //     ]);
+
+    //     $user = User::where('email', $request->email)->first();
+
+    //     if (!$user || !Hash::check($request->password, $user->password)) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Invalid login details'
+    //         ], 401);
+    //     }
+
+    //     if ($user->status != 1) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Please verify your email first'
+    //         ], 401);
+    //     }
+
+    //     // Generate OTP
+    //     $otp = rand(100000, 999999);
+    //     $user->update([
+    //         'otp' => $otp,
+    //         'otp_expires_at' => now()->addMinutes(10) //opt valid time
+    //     ]);
+
+    //     // Send OTP email
+    //     Mail::to($user->email)->send(new OtpEmail($user, $otp));
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'OTP sent to your email. Please enter the OTP to complete login.'
+    //     ]);
+    // }
+    
     public function login(Request $request)
     {
         $request->validate([
@@ -103,35 +143,32 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
+        // Check user
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid login details'
+                'message' => 'Invalid email or password'
             ], 401);
         }
 
+        // Optional: check email verification / status
         if ($user->status != 1) {
             return response()->json([
                 'status' => false,
                 'message' => 'Please verify your email first'
-            ], 401);
+            ], 403);
         }
 
-        // Generate OTP
-        $otp = rand(100000, 999999);
-        $user->update([
-            'otp' => $otp,
-            'otp_expires_at' => now()->addMinutes(10) //opt valid time
-        ]);
-
-        // Send OTP email
-        Mail::to($user->email)->send(new OtpEmail($user, $otp));
+        // Generate JWT token
+        $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'status' => true,
-            'message' => 'OTP sent to your email. Please enter the OTP to complete login.'
+            'message' => 'Login successful',
+            'token' => $token,
+            'user1' => $user
         ]);
     }
 
