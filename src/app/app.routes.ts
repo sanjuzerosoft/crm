@@ -10,6 +10,21 @@ import { Customerslist } from './customers/customerslist/customerslist';
 import { Customersadd } from './customers/customersadd/customersadd';
 import { Customersview } from './customers/customersview/customersview';
 
+//Masters
+import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadassigneelist';
+import { Leadassigneeadd } from './masters/leadassignee/leadassigneeadd/leadassigneeadd';
+import { Leadassigneeview } from './masters/leadassignee/leadassigneeview/leadassigneeview';
+
+import { Leadsourceadd } from './masters/leadsource/leadsourceadd/leadsourceadd';
+import { Leadsourceview } from './masters/leadsource/leadsourceview/leadsourceview';
+import { Leadsourcelist } from './masters/leadsource/leadsourcelist/leadsourcelist';
+
+import { Leadstatusadd } from './masters/leadstatus/leadstatusadd/leadstatusadd';
+import { Leadstatusview } from './masters/leadstatus/leadstatusview/leadstatusview';
+import { Leadstatuslist } from './masters/leadstatus/leadstatuslist/leadstatuslist';
+
+
+
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
@@ -28,6 +43,22 @@ export const routes: Routes = [
       { path: 'customers/add', component: Customersadd },
       { path: 'customers/add/:id', component: Customersadd },
       { path: 'customers/view/:id', component: Customersview },
+
+      //Masters
+      { path: 'leadassignee', component: Leadassigneelist },
+      { path: 'leadassignee/add', component: Leadassigneeadd },
+      { path: 'leadassignee/add/:id', component: Leadassigneeadd },
+      { path: 'leadassignee/view/:id', component: Leadassigneeview },
+      
+      { path: 'leadsource', component: Leadsourcelist },
+      { path: 'leadsource/add', component: Leadsourceadd },
+      { path: 'leadsource/add/:id', component: Leadsourceadd },
+      { path: 'leadsource/view/:id', component: Leadsourceview },
+
+      { path: 'leadstatus', component: Leadstatuslist },
+      { path: 'leadstatus/add', component: Leadstatusadd },
+      { path: 'leadstatus/add/:id', component: Leadstatusadd },
+      { path: 'leadstatus/view/:id', component: Leadstatusview },
       
     ]
   },
