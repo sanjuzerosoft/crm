@@ -39,7 +39,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Lead Asignee</th>
+            <th>Lead Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -50,7 +50,14 @@
             <td>{{ lead.first_name }}</td>
             <td>{{ lead.email }}</td>
             <td>{{ lead.mobile }}</td>
-            <td>{{ lead.lead_assignee }}</td>
+            <td>
+              <span 
+              class="status"
+              [ngClass]="
+              {sucess: lead.lead_status === 'active',
+                  danger: lead.lead_status === 'inactive',}
+              ">{{ lead.lead_status }}</span>
+            </td>
 
             <td class="actions">
               <img src="edit.png" class="action-icon" (click)="editLead(lead.id)" />

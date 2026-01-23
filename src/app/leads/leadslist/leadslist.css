@@ -163,6 +163,23 @@
   background: #e53935;
   color: #fff;
 }
+.status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.sucess {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status.danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {

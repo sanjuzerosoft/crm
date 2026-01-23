@@ -50,8 +50,8 @@
               <span
                 class="status"
                 [ngClass]="{
-                  active: customer.customer_status === 'Active',
-                  danger: customer.customer_status === 'InActive',
+                  sucess: customer.customer_status === 'active',
+                  danger: customer.customer_status === 'inactive',
                 }"
                 >{{ customer.customer_status }}</span
               >
