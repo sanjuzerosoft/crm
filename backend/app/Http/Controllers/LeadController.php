@@ -8,10 +8,27 @@ use Illuminate\Http\Request;
 class LeadController extends Controller
 {
     // GET all leads
-    public function index()
-    {
-        return LeadData::all();
+    // public function index()
+    // {
+    //     return LeadData::all();
+    // }
+    public function index(Request $request)
+{
+    $query = LeadData::query();
+
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('first_name', 'like', "%$search%")
+              ->orWhere('email', 'like', "%$search%")
+              ->orWhere('mobile', 'like', "%$search%");
+        });
     }
+
+    return $query->latest()->get();
+}
+
 
     // CREATE lead
     public function store(Request $request)

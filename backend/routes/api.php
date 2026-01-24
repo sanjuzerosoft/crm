@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeadAssigneeController;
 
 
 use Illuminate\Support\Facades\Mail;
@@ -49,6 +50,12 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
 // Dashboard
 Route::get('/dashboard-report', [DashboardController::class, 'dashboardReport']);
+
+// master
+Route::get('/lead-assignees', [LeadAssigneeController::class, 'index']);
+Route::post('/lead-assignees', [LeadAssigneeController::class, 'store']);
+Route::put('/lead-assignees/{id}', [LeadAssigneeController::class, 'update']);
+Route::delete('/lead-assignees/{id}', [LeadAssigneeController::class, 'destroy']);
 
 
 
