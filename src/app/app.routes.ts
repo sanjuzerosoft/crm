@@ -10,6 +10,15 @@ import { Customerslist } from './customers/customerslist/customerslist';
 import { Customersadd } from './customers/customersadd/customersadd';
 import { Customersview } from './customers/customersview/customersview';
 
+//Masters
+import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadassigneelist';
+import { Leadassigneeadd } from './masters/leadassignee/leadassigneeadd/leadassigneeadd';
+import { Leadassigneeview } from './masters/leadassignee/leadassigneeview/leadassigneeview';
+
+
+
+
+
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
@@ -28,7 +37,13 @@ export const routes: Routes = [
       { path: 'customers/add', component: Customersadd },
       { path: 'customers/add/:id', component: Customersadd },
       { path: 'customers/view/:id', component: Customersview },
-      
+
+      //Masters
+      { path: 'leadassignee', component: Leadassigneelist },
+      { path: 'leadassignee/add', component: Leadassigneeadd },
+      { path: 'leadassignee/add/:id', component: Leadassigneeadd },
+      { path: 'leadassignee/view/:id', component: Leadassigneeview },
+
     ]
   },
 

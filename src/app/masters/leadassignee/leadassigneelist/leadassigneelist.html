@@ -1,0 +1,95 @@
+<div class="wrapper">
+
+    <div class="container">
+
+        <div class="button-container">
+            <button class="red-btn-active">Lead Source</button>
+            <button class="red-btn">Lead Assignee</button>
+            <button class="red-btn">Lead Status</button>
+            <button class="red-btn">Industry Type</button>
+        </div>
+
+        <div class="header">
+
+            <!-- Page Header -->
+            <div>
+                <div class="page-title">
+                    Lead Assignee List -
+                    <span class="count">({{ totalAssignees }})</span>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div>
+                <div class="toolbar">
+                    <div class="search-box">
+                        <img src="search.png" alt="Search" class="search-icon" />
+                        <input type="text" placeholder="Search assignee..." [(ngModel)]="searchText" />
+                    </div>
+
+                    <button class="add-btn" (click)="addAssignee()">
+                        <img src="add.png" alt="Add" class="btn-icon" />
+                        Add
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table class="leads-table">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Assignee Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let assignee of assignees; let i = index" class="clickable-row">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ assignee.name }}</td>
+                        <td>{{ assignee.email }}</td>
+                        <td>{{ assignee.mobile }}</td>
+                        <td>{{ assignee.role }}</td>
+                        <td>
+                            <span class="status" [ngClass]="{
+                  sucess: assignee.status === 'Active',
+                  danger: assignee.status === 'Inactive'
+                }">
+                                {{ assignee.status }}
+                            </span>
+                        </td>
+
+                        <td class="actions">
+                            <img src="edit.png" class="action-icon"
+                                (click)="editAssignee(assignee.id); $event.stopPropagation()" />
+                            <img src="delete.png" class="action-icon delete"
+                                (click)="openDeletePopup(assignee.id); $event.stopPropagation()" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal-backdrop" *ngIf="showDeletePopup">
+                <div class="modal">
+                    <h3>Confirm Delete</h3>
+                    <p>Are you sure you want to delete this assignee?</p>
+
+                    <div class="modal-actions">
+                        <button class="btn cancel" (click)="closeDeletePopup()">No</button>
+                        <button class="btn delete" (click)="confirmDelete()">Yes</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
