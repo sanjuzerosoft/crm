@@ -7,6 +7,8 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../services/auth';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-leadslist',
@@ -16,6 +18,8 @@ import { Auth } from '../../services/auth';
   styleUrl: './leadslist.css',
 })
 export class Leadslist implements OnInit {
+  searchSubject: Subject<string> = new Subject<string>();
+  isLoading = false;
   leads: any[] = [];
   allLeads: any[] = []; // backup list
   searchText: string = ''; //search input
@@ -40,14 +44,15 @@ export class Leadslist implements OnInit {
   }
 
   constructor(
-    private router: Router, private http: HttpClient, 
-    private cdr: ChangeDetectorRef,    
-    private authService: Auth
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private authService: Auth,
   ) {}
 
   getLeads() {
-    const token =this.authService.getToken();
-      
+    const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -59,7 +64,7 @@ export class Leadslist implements OnInit {
         catchError((error) => {
           console.error('Error fetching leads:', error);
           return throwError(() => error);
-        })
+        }),
       )
       .subscribe({
         next: (data) => {
@@ -75,19 +80,45 @@ export class Leadslist implements OnInit {
   }
 
   ngOnInit() {
-    this.getLeads();
-  }
+  this.getLeads();
+
+  this.searchSubject
+    .pipe(
+      debounceTime(500),        // wait 500ms after typing stops
+      distinctUntilChanged()    // only if value changed
+    )
+    .subscribe((searchText) => {
+      this.searchLeads(searchText);
+    });
+}
+
 
   onSearch() {
-    const value = this.searchText.toLowerCase();
+  this.searchSubject.next(this.searchText);
+}
+searchLeads(searchText: string) {
+  const token = this.authService.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
 
-    this.leads = this.allLeads.filter(
-      (lead) =>
-        lead.first_name.toLowerCase().includes(value) ||
-        lead.email.toLowerCase().includes(value) ||
-        lead.mobile.toLowerCase().includes(value)
-    );
-  }
+  this.isLoading = true;
+
+  this.http
+    .get<any[]>(`${this.authService.apiUrl}/leads?search=${searchText}`, { headers })
+    .pipe(
+      catchError((error) => {
+        console.error('Search failed:', error);
+        this.isLoading = false;
+        return throwError(() => error);
+      })
+    )
+    .subscribe((data) => {
+      this.leads = data;
+      this.isLoading = false;
+    });
+}
+
 
   get totalLeads(): number {
     return this.leads.length;
@@ -102,7 +133,6 @@ export class Leadslist implements OnInit {
     // this.router.navigate(['/leads/view', [id]]);
   }
 
-  
   viewLead(id: number) {
     console.log('Edit lead:', id);
     this.router.navigate(['/leads/view', id]);
@@ -122,7 +152,7 @@ export class Leadslist implements OnInit {
         catchError((error) => {
           console.error('Delete failed:', error);
           return throwError(() => error);
-        })
+        }),
       )
       .subscribe(() => {
         this.getLeads();

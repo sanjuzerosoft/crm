@@ -1,19 +1,24 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; 
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Auth } from '../../services/auth';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-customerslist',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './customerslist.html',
   styleUrl: './customerslist.css',
 })
-export class Customerslist implements OnInit {
+export class Customerslist implements OnInit {  
+  searchSubject: Subject<string> = new Subject<string>();  
+  isLoading = false;
   customers: any[] = [];
   allCustomers: any[] = [];
   searchText: string = '';
@@ -73,20 +78,46 @@ export class Customerslist implements OnInit {
 
   ngOnInit() {
     this.getCustomers();
+
+    this.searchSubject
+    .pipe(
+      debounceTime(500),        // wait 500ms after typing stops
+      distinctUntilChanged()    // only if value changed
+    )
+    .subscribe((searchText) => {
+      this.searchCustomers(searchText);
+    });
   }
 
   //new
 
   onSearch() {
-    const value = this.searchText.toLowerCase();
-
-    this.customers = this.allCustomers.filter(
-      (item) =>
-        item.first_name.toLowerCase().includes(value) ||
-        item.email.toLowerCase().includes(value) ||
-        item.mobile.toLowerCase().includes(value),
-    );
+    this.searchSubject.next(this.searchText);
   }
+
+  searchCustomers(searchText: string) {
+  const token = this.authService.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.isLoading = true;
+
+  this.http
+    .get<any[]>(`${this.authService.apiUrl}/customers?search=${searchText}`, { headers })
+    .pipe(
+      catchError((error) => {
+        console.error('Search failed:', error);
+        this.isLoading = false;
+        return throwError(() => error);
+      })
+    )
+    .subscribe((data) => {
+      this.customers = data;
+      console.log('customers search:', this.customers);
+      this.isLoading = false;
+    });
+}
 
   get totalcustomers(): number {
     return this.customers.length;

@@ -16,9 +16,9 @@
             <!-- <input type="text" placeholder="Search leads..." /> -->
             <input
               type="text"
-              placeholder="Search leads..."
               [(ngModel)]="searchText"
               (input)="onSearch()"
+              placeholder="Search leads..."
             />
           </div>
 
@@ -45,18 +45,24 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let lead of leads;let i=index" (click)="viewLead(lead.id)" class="clickable-row">
-            <td>{{i+1 }}</td>
+          <tr
+            *ngFor="let lead of leads; let i = index"
+            (click)="viewLead(lead.id)"
+            class="clickable-row"
+          >
+            <td>{{ i + 1 }}</td>
             <td>{{ lead.first_name }}</td>
             <td>{{ lead.email }}</td>
             <td>{{ lead.mobile }}</td>
             <td>
-              <span 
-              class="status"
-              [ngClass]="
-              {sucess: lead.lead_status === 'active',
-                  danger: lead.lead_status === 'inactive',}
-              ">{{ lead.lead_status }}</span>
+              <span
+                class="status"
+                [ngClass]="{
+                  sucess: lead.lead_status === 'active',
+                  danger: lead.lead_status === 'inactive',
+                }"
+                >{{ lead.lead_status }}</span
+              >
             </td>
 
             <td class="actions">
@@ -83,5 +89,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div *ngIf="isLoading" class="page-loader">
+    <div class="spinner"></div>
   </div>
 </div>

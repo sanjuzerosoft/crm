@@ -11,7 +11,11 @@
         <div class="toolbar">
           <div class="search-box">
             <img src="search.png" alt="Search" class="search-icon" />
-            <input type="text" placeholder="Search customers..." />
+            <input 
+            type="text" 
+            [(ngModel)]="searchText"
+            (input)="onSearch()"
+            placeholder="Search customers..." />
           </div>
 
           <button class="add-btn" (click)="AddCustomers()">
@@ -86,5 +90,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div *ngIf="isLoading" class="page-loader">
+    <div class="spinner"></div>
   </div>
 </div>
