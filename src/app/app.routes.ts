@@ -15,9 +15,6 @@ import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadas
 import { Leadassigneeadd } from './masters/leadassignee/leadassigneeadd/leadassigneeadd';
 import { Leadassigneeview } from './masters/leadassignee/leadassigneeview/leadassigneeview';
 
-import { Leadsourceadd } from './masters/leadsource/leadsourceadd/leadsourceadd';
-import { Leadsourceview } from './masters/leadsource/leadsourceview/leadsourceview';
-import { Leadsourcelist } from './masters/leadsource/leadsourcelist/leadsourcelist';
 
 
 
@@ -47,13 +44,6 @@ export const routes: Routes = [
       { path: 'leadassignee/add/:id', component: Leadassigneeadd },
       { path: 'leadassignee/view/:id', component: Leadassigneeview },
 
-      { path: 'leadsource', component: Leadsourcelist },
-      { path: 'leadsource/add', component: Leadsourceadd },
-      { path: 'leadsource/add/:id', component: Leadsourceadd },
-      { path: 'leadsource/view/:id', component: Leadsourceview },
-
-   
-      
     ]
   },
 
