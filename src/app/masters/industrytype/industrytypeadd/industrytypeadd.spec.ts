@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Leadassigneeview } from './leadassigneeview';
+import { Industrytypeadd } from './industrytypeadd';
 
-describe('Leadassigneeview', () => {
-  let component: Leadassigneeview;
-  let fixture: ComponentFixture<Leadassigneeview>;
+describe('Industrytypeadd', () => {
+  let component: Industrytypeadd;
+  let fixture: ComponentFixture<Industrytypeadd>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Leadassigneeview]
+      imports: [Industrytypeadd]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Leadassigneeview);
+    fixture = TestBed.createComponent(Industrytypeadd);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
