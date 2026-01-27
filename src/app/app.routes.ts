@@ -13,7 +13,6 @@ import { Customersview } from './customers/customersview/customersview';
 //Masters
 import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadassigneelist';
 import { Leadassigneeadd } from './masters/leadassignee/leadassigneeadd/leadassigneeadd';
-import { Leadassigneeview } from './masters/leadassignee/leadassigneeview/leadassigneeview';
 
 
 
@@ -42,7 +41,6 @@ export const routes: Routes = [
       { path: 'leadassignee', component: Leadassigneelist },
       { path: 'leadassignee/add', component: Leadassigneeadd },
       { path: 'leadassignee/add/:id', component: Leadassigneeadd },
-      { path: 'leadassignee/view/:id', component: Leadassigneeview },
 
     ]
   },
