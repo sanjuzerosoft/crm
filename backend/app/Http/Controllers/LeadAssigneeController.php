@@ -9,7 +9,7 @@ class LeadAssigneeController extends Controller
 {
      public function index()
     {
-        return leadassignee::where('status', 1)->get();
+        return leadassignee::all();
     }
     public function store(Request $request)
     {
@@ -28,6 +28,12 @@ class LeadAssigneeController extends Controller
             'message' => 'Lead assignee created successfully',
             'data' => $assignee
         ]);
+    }
+
+    // view
+    public function show($id)
+    {
+         return leadassignee::findOrFail($id);
     }
 
     // Update assignee
@@ -52,7 +58,8 @@ class LeadAssigneeController extends Controller
     public function destroy($id)
     {
         $assignee = leadassignee::findOrFail($id);
-        $assignee->update(['status' => 0]);
+        // $assignee->update(['status' => 0]);
+        $assignee->delete();
 
         return response()->json([
             'status' => true,

@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeadAssigneeController;
+use App\Http\Controllers\IndustryTypeController;
 
 
 use Illuminate\Support\Facades\Mail;
@@ -52,10 +53,18 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::get('/dashboard-report', [DashboardController::class, 'dashboardReport']);
 
 // master
+// -lead assignee
 Route::get('/lead-assignees', [LeadAssigneeController::class, 'index']);
+Route::get('/lead-assignees/{id}', [LeadAssigneeController::class, 'show']);
 Route::post('/lead-assignees', [LeadAssigneeController::class, 'store']);
 Route::put('/lead-assignees/{id}', [LeadAssigneeController::class, 'update']);
 Route::delete('/lead-assignees/{id}', [LeadAssigneeController::class, 'destroy']);
+// industry type
+Route::get('/industry-types', [IndustryTypeController::class, 'index']);
+Route::post('/industry-types', [IndustryTypeController::class, 'store']);
+Route::get('/industry-types/{id}', [IndustryTypeController::class, 'show']);
+Route::put('/industry-types/{id}', [IndustryTypeController::class, 'update']);
+Route::delete('/industry-types/{id}', [IndustryTypeController::class, 'destroy']);
 
 
 
