@@ -21,10 +21,10 @@ export class Leadassigneeadd implements OnInit {
   assignee = {
     name: '',
     email: '',
-    mobile: '',
+    code:'222',
+    mobile_number: '',
     role: '',
     status: '',
-    description: '',
   };
 
   constructor(
@@ -54,6 +54,7 @@ export class Leadassigneeadd implements OnInit {
       .subscribe({
         next: (data) => {
           this.assignee = data;
+          console.log("assignee",this.assignee)
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -78,7 +79,8 @@ export class Leadassigneeadd implements OnInit {
         )
       );
       console.log('Assignee saved:', response);
-      this.router.navigate(['/masters/lead-assignee']);
+      this.router.navigate(['/leadassignee']);
+      // this.router.navigate(['/masters/lead-assignee']);
     } catch (error) {
       console.error('Error saving assignee:', error);
     }
@@ -100,7 +102,7 @@ export class Leadassigneeadd implements OnInit {
         )
       );
       console.log('Assignee updated:', response);
-      this.router.navigate(['/masters/lead-assignee']);
+      this.router.navigate(['/leadassignee']);
     } catch (error) {
       console.error('Error updating assignee:', error);
     }
@@ -111,15 +113,15 @@ export class Leadassigneeadd implements OnInit {
     this.assignee = {
       name: '',
       email: '',
-      mobile: '',
+      code:'',
+      mobile_number: '',
       role: '',
       status: '',
-      description: '',
     };
   }
 
   /* 🔹 Go back */
   goBack() {
-    this.router.navigate(['/masters/lead-assignee']);
+    this.router.navigate(['/leadassignee']);
   }
 }

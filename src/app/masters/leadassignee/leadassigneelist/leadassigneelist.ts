@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Auth } from '../../../services/auth';
+import { HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-leadassigneelist',
@@ -12,6 +19,10 @@ import { Router } from '@angular/router';
 })
 export class Leadassigneelist implements OnInit {
 
+  searchSubject: Subject<string> = new Subject<string>();
+isLoading = false;
+
+
   assignees: any[] = [];
   allAssignees: any[] = []; 
   searchText: string = '';
@@ -19,54 +30,82 @@ export class Leadassigneelist implements OnInit {
   showDeletePopup = false;
   selectedAssigneeId: number | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+      private authService: Auth,      
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,) {}
 
   ngOnInit() {
-    this.loadAssignees();
+    this.getLeadAsignee();
+
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    )
+    .subscribe((text) => {
+      this.searchAssignees(text);
+    });
   }
 
-  loadAssignees() {
-    this.assignees = [
-      {
-        id: 1,
-        name: 'Ravi Kumar',
-        email: 'ravi@test.com',
-        mobile: '9876543210',
-        role: 'Sales Executive',
-        status: 'Active',
-      },
-      {
-        id: 2,
-        name: 'Priya Sharma',
-        email: 'priya@test.com',
-        mobile: '9123456780',
-        role: 'Telecaller',
-        status: 'Inactive',
-      },
-      {
-        id: 3,
-        name: 'Arun Raj',
-        email: 'arun@test.com',
-        mobile: '9000011111',
-        role: 'Sales Manager',
-        status: 'Active',
-      },
-    ];
+  getLeadAsignee() {
+    const token = this.authService.getToken();
 
-    this.allAssignees = [...this.assignees];
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    this.http
+          .get<any[]>(`${this.authService.apiUrl}/lead-assignees`, { headers })
+          .pipe(
+            catchError((error) => {
+              console.error('Error fetching leads:', error);
+              return throwError(() => error);
+            }),
+          )
+          .subscribe({
+        next: (data) => {
+          this.assignees = data;
+          this.allAssignees = data;
+          console.log('Leads:', this.assignees);
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error fetching leads:', error);
+        },
+      });
   }
 
   // 🔍 Search
   onSearch() {
-    const value = this.searchText.toLowerCase();
-
-    this.assignees = this.allAssignees.filter(
-      (a) =>
-        a.name.toLowerCase().includes(value) ||
-        a.email.toLowerCase().includes(value) ||
-        a.mobile.includes(value)
-    );
+    this.searchSubject.next(this.searchText);
   }
+
+  searchAssignees(searchText: string) {
+  const token = this.authService.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.isLoading = true;
+
+  this.http
+    .get<any[]>(
+      `${this.authService.apiUrl}/lead-assignees?search=${searchText}`,
+      { headers }
+    )
+    .pipe(
+      catchError((error) => {
+        console.error('Search failed:', error);
+        this.isLoading = false;
+        return throwError(() => error);
+      })
+    )
+    .subscribe((data) => {
+      this.assignees = data;
+      this.isLoading = false;
+    });
+}
+
 
   // 📊 Count
   get totalAssignees(): number {
@@ -82,6 +121,7 @@ export class Leadassigneelist implements OnInit {
   // ✏️ Edit
   editAssignee(id: number) {
     console.log('Edit assignee:', id);
+    this.router.navigate(['leadassignee/add',id]);
     // this.router.navigate(['/masters/lead-assignee/edit', id]);
   }
 
@@ -95,16 +135,32 @@ export class Leadassigneelist implements OnInit {
     this.showDeletePopup = false;
     this.selectedAssigneeId = null;
   }
+  deleteAssignee(id: number) {
+  const token = this.authService.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.http
+    .delete(`${this.authService.apiUrl}/lead-assignees/${id}`, { headers })
+    .pipe(
+      catchError((error) => {
+        console.error('Delete failed:', error);
+        return throwError(() => error);
+      })
+    )
+    .subscribe(() => {
+      this.getLeadAsignee()
+      this.assignees = this.assignees.filter(a => a.id !== id);
+      this.allAssignees = this.allAssignees.filter(a => a.id !== id);
+    });
+}
+
 
   confirmDelete() {
-    if (this.selectedAssigneeId !== null) {
-      this.assignees = this.assignees.filter(
-        (a) => a.id !== this.selectedAssigneeId
-      );
-      this.allAssignees = this.allAssignees.filter(
-        (a) => a.id !== this.selectedAssigneeId
-      );
-    }
-    this.closeDeletePopup();
+     if (this.selectedAssigneeId !== null) {
+    this.deleteAssignee(this.selectedAssigneeId);
+  }
+  this.closeDeletePopup()
   }
 }

@@ -24,7 +24,7 @@
                 <div class="toolbar">
                     <div class="search-box">
                         <img src="search.png" alt="Search" class="search-icon" />
-                        <input type="text" placeholder="Search assignee..." [(ngModel)]="searchText" />
+                        <input type="text" placeholder="Search assignee..." [(ngModel)]="searchText" (input)="onSearch()"/>
                     </div>
 
                     <button class="add-btn" (click)="addAssignee()">
@@ -56,7 +56,7 @@
                         <td>{{ i + 1 }}</td>
                         <td>{{ assignee.name }}</td>
                         <td>{{ assignee.email }}</td>
-                        <td>{{ assignee.mobile }}</td>
+                        <td>{{ assignee.mobile_number }}</td>
                         <td>{{ assignee.role }}</td>
                         <td>
                             <span class="status" [ngClass]="{

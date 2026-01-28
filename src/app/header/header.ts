@@ -9,5 +9,8 @@ import { Router } from '@angular/router';
   styleUrl: './header.css',
 })
 export class Header {
-
+  constructor(private router: Router,){}
+masters(){
+  this.router.navigate(['/leadassignee']);
+}
 }
