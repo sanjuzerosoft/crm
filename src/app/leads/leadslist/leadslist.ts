@@ -81,14 +81,21 @@ export class Leadslist implements OnInit {
 
   ngOnInit() {
   this.getLeads();
+  this.searchText = '';
 
   this.searchSubject
     .pipe(
-      debounceTime(500),        // wait 500ms after typing stops
+      debounceTime(300),        // wait 500ms after typing stops
       distinctUntilChanged()    // only if value changed
     )
     .subscribe((searchText) => {
-      this.searchLeads(searchText);
+      // this.searchLeads(searchText);
+      if (searchText.trim() === '') {
+        this.leads = [...this.allLeads];
+      } else {
+        this.searchLeads(searchText);
+      }
+      this.cdr.detectChanges();
     });
 }
 
@@ -116,6 +123,7 @@ searchLeads(searchText: string) {
     .subscribe((data) => {
       this.leads = data;
       this.isLoading = false;
+      this.cdr.detectChanges();
     });
 }
 

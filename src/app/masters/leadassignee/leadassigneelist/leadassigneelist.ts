@@ -37,14 +37,20 @@ isLoading = false;
 
   ngOnInit() {
     this.getLeadAsignee();
+  this.searchText = '';
 
     this.searchSubject
     .pipe(
-      debounceTime(500),
+      debounceTime(300),
       distinctUntilChanged()
     )
-    .subscribe((text) => {
-      this.searchAssignees(text);
+    .subscribe((searchText) => {
+      if (searchText.trim() === '') {
+        this.assignees = [...this.allAssignees];
+      } else {
+        this.searchAssignees(searchText);
+      }
+      this.cdr.detectChanges();
     });
   }
 
@@ -103,6 +109,7 @@ isLoading = false;
     .subscribe((data) => {
       this.assignees = data;
       this.isLoading = false;
+      this.cdr.detectChanges();
     });
 }
 
@@ -162,5 +169,15 @@ isLoading = false;
     this.deleteAssignee(this.selectedAssigneeId);
   }
   this.closeDeletePopup()
+  }
+
+  assigneeeMaster(){
+    this.router.navigate(['leadassignee']);
+  }
+  industryMaster(){
+    this.router.navigate(['IndustryType']);
+  }
+  projectMaster(){
+    this.router.navigate(['project']);
   }
 }

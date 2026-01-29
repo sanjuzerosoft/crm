@@ -11,23 +11,22 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-industrytypelist',
+  selector: 'app-projectlist',
   imports: [CommonModule, FormsModule],
-  templateUrl: './industrytypelist.html',
-  styleUrl: './industrytypelist.css',
+  templateUrl: './projectlist.html',
+  styleUrl: './projectlist.css',
 })
-export class Industrytypelist implements OnInit {
-
-  searchSubject: Subject<string> = new Subject<string>();
+export class Projectlist implements OnInit {
+searchSubject: Subject<string> = new Subject<string>();
 isLoading = false;
 
 
-  Industrytype: any[] = [];
-  allIndustrytype: any[] = []; 
+  projects: any[] = [];
+  allprojects: any[] = []; 
   searchText: string = '';
 
   showDeletePopup = false;
-  selectedIndustryId: number | null = null;
+  selectedprojectId: number | null = null;
 
   constructor(private router: Router,
       private authService: Auth,      
@@ -35,9 +34,8 @@ isLoading = false;
     private http: HttpClient,) {}
 
   ngOnInit() {
-    this.getIndustrytype();
-    
-    this.searchText = '';
+    this.getProjects();
+  this.searchText = '';
 
     this.searchSubject
     .pipe(
@@ -46,37 +44,37 @@ isLoading = false;
     )
     .subscribe((searchText) => {
       if (searchText.trim() === '') {
-        this.Industrytype = [...this.allIndustrytype];
+        this.projects = [...this.allprojects];
       } else {
-        this.searchIndustrytypes(searchText);
+        this.searchprojects(searchText);
       }
       this.cdr.detectChanges();
     });
   }
 
-  getIndustrytype() {
+  getProjects() {
     const token = this.authService.getToken();
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
     this.http
-          .get<any[]>(`${this.authService.apiUrl}/industry-types`, { headers })
+          .get<any[]>(`${this.authService.apiUrl}/projects`, { headers })
           .pipe(
             catchError((error) => {
-              console.error('Error fetching Industrytype:', error);
+              console.error('Error fetching projects:', error);
               return throwError(() => error);
             }),
           )
           .subscribe({
         next: (data) => {
-          this.Industrytype = data;
-          this.allIndustrytype = data;
-          console.log('Industrytype:', this.Industrytype);
+          this.projects = data;
+          this.allprojects = data;
+          console.log('Projects:', this.projects);
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Error fetching Industrytype:', error);
+          console.error('Error fetching projects:', error);
         },
       });
   }
@@ -86,7 +84,7 @@ isLoading = false;
     this.searchSubject.next(this.searchText);
   }
 
-  searchIndustrytypes(searchText: string) {
+  searchprojects(searchText: string) {
   const token = this.authService.getToken();
   const headers = new HttpHeaders({
     Authorization: `Bearer ${token}`,
@@ -96,7 +94,7 @@ isLoading = false;
 
   this.http
     .get<any[]>(
-      `${this.authService.apiUrl}/industry-types?search=${searchText}`,
+      `${this.authService.apiUrl}/projects?search=${searchText}`,
       { headers }
     )
     .pipe(
@@ -107,7 +105,7 @@ isLoading = false;
       })
     )
     .subscribe((data) => {
-      this.Industrytype = data;
+      this.projects = data;
       this.isLoading = false;
       this.cdr.detectChanges();
     });
@@ -115,40 +113,41 @@ isLoading = false;
 
 
   // 📊 Count
-  get totalIndustrytypes(): number {
-    return this.Industrytype.length;
+  get totalProjects(): number {
+    return this.projects.length;
   }
 
   // ➕ Add
-  addIndustrytype() {
-  this.router.navigate(['IndustryType/add']);
+  addproject() {
+  this.router.navigate(['project/add']);
 }
 
 
   // ✏️ Edit
-  editIndustrytype(id: number) {
-    console.log('Edit Industrytype:', id);
-    this.router.navigate(['IndustryType/add',id]);
+  editProject(id: number) {
+    console.log('Edit project:', id);
+    this.router.navigate(['project/add',id]);
+    // this.router.navigate(['/masters/project/edit', id]);
   }
 
   // ❌ Delete popup
   openDeletePopup(id: number) {
-    this.selectedIndustryId = id;
+    this.selectedprojectId = id;
     this.showDeletePopup = true;
   }
 
   closeDeletePopup() {
     this.showDeletePopup = false;
-    this.selectedIndustryId = null;
+    this.selectedprojectId = null;
   }
-  deleteIndustrytype(id: number) {
+  deleteProject(id: number) {
   const token = this.authService.getToken();
   const headers = new HttpHeaders({
     Authorization: `Bearer ${token}`,
   });
 
   this.http
-    .delete(`${this.authService.apiUrl}/industry-types/${id}`, { headers })
+    .delete(`${this.authService.apiUrl}/projects/${id}`, { headers })
     .pipe(
       catchError((error) => {
         console.error('Delete failed:', error);
@@ -156,16 +155,16 @@ isLoading = false;
       })
     )
     .subscribe(() => {
-      this.getIndustrytype()
-      this.Industrytype = this.Industrytype.filter(a => a.id !== id);
-      this.allIndustrytype = this.allIndustrytype.filter(a => a.id !== id);
+      this.getProjects();
+      this.projects = this.projects.filter(p => p.id !== id);
+      this.allprojects = this.allprojects.filter(p => p.id !== id);
     });
 }
 
 
   confirmDelete() {
-     if (this.selectedIndustryId !== null) {
-    this.deleteIndustrytype(this.selectedIndustryId);
+     if (this.selectedprojectId !== null) {
+    this.deleteProject(this.selectedprojectId);
   }
   this.closeDeletePopup()
   }

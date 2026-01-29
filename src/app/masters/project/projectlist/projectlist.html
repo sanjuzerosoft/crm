@@ -2,16 +2,16 @@
   <div class="container">
     <div class="button-container">
             <button class="red-btn" (click)="assigneeeMaster()">Lead Assignee</button>
-            <button class="red-btn" (click)="projectMaster()" routerLink="/IndustryType">Project</button>
-            <button class="red-btn-active" (click)="industryMaster()" routerLink="/industry-type">Industry Type</button>
+            <button class="red-btn-active" (click)="projectMaster()" >Project</button>
+            <button class="red-btn" (click)="industryMaster()">Industry Type</button>
         </div>
 
     <div class="header">
       <!-- Page Header -->
       <div>
         <div class="page-title">
-          Industrytype List -
-          <span class="count">({{ totalIndustrytypes }})</span>
+          Projects List -
+          <span class="count">({{ totalProjects }})</span>
         </div>
       </div>
 
@@ -22,13 +22,13 @@
             <img src="search.png" alt="Search" class="search-icon" />
             <input
               type="text"
-              placeholder="Search Industrytype..."
+              placeholder="Search project..."
               [(ngModel)]="searchText"
               (input)="onSearch()"
             />
           </div>
 
-          <button class="add-btn" (click)="addIndustrytype()">
+          <button class="add-btn" (click)="addproject()">
             <img src="add.png" alt="Add" class="btn-icon" />
             Add
           </button>
@@ -42,25 +42,25 @@
         <thead>
           <tr>
             <th>S.No</th>
-            <th>Industrytype Name</th>
+            <th>Projects Name</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let Industrytypes of Industrytype; let i = index" class="clickable-row">
+          <tr *ngFor="let project of projects; let i = index" class="clickable-row">
             <td>{{ i + 1 }}</td>
-            <td>{{ Industrytypes.name }}</td>
+            <td>{{ project.name }}</td>
             <td>
               <span
                 class="status"
                 [ngClass]="{
-                  sucess: Industrytypes.status === 'Active',
-                  danger: Industrytypes.status === 'Inactive',
+                  sucess: project.status === 'Active',
+                  danger: project.status === 'Inactive',
                 }"
               >
-                {{ Industrytypes.status }}
+                {{ project.status }}
               </span>
             </td>
 
@@ -68,12 +68,12 @@
               <img
                 src="edit.png"
                 class="action-icon"
-                (click)="editIndustrytype(Industrytypes.id); $event.stopPropagation()"
+                (click)="editProject(project.id); $event.stopPropagation()"
               />
               <img
                 src="delete.png"
                 class="action-icon delete"
-                (click)="openDeletePopup(Industrytypes.id); $event.stopPropagation()"
+                (click)="openDeletePopup(project.id); $event.stopPropagation()"
               />
             </td>
           </tr>
@@ -84,7 +84,7 @@
       <div class="modal-backdrop" *ngIf="showDeletePopup">
         <div class="modal">
           <h3>Confirm Delete</h3>
-          <p>Are you sure you want to delete this Industrytype?</p>
+          <p>Are you sure you want to delete this Project?</p>
 
           <div class="modal-actions">
             <button class="btn cancel" (click)="closeDeletePopup()">No</button>

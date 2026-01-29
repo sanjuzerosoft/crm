@@ -78,14 +78,20 @@ export class Customerslist implements OnInit {
 
   ngOnInit() {
     this.getCustomers();
+    this.searchText = '';
 
     this.searchSubject
     .pipe(
-      debounceTime(500),        // wait 500ms after typing stops
+      debounceTime(300),        // wait 300ms after typing stops
       distinctUntilChanged()    // only if value changed
     )
     .subscribe((searchText) => {
-      this.searchCustomers(searchText);
+      if (searchText.trim() === '') {
+        this.customers = [...this.allCustomers];
+      } else {
+        this.searchCustomers(searchText);
+      }
+      this.cdr.detectChanges();
     });
   }
 
@@ -93,6 +99,7 @@ export class Customerslist implements OnInit {
 
   onSearch() {
     this.searchSubject.next(this.searchText);
+    
   }
 
   searchCustomers(searchText: string) {
@@ -116,6 +123,7 @@ export class Customerslist implements OnInit {
       this.customers = data;
       console.log('customers search:', this.customers);
       this.isLoading = false;
+      this.cdr.detectChanges();
     });
 }
 
@@ -134,6 +142,8 @@ export class Customerslist implements OnInit {
 
   viewCustomer(id: number) {
     console.log('Edit customer:', id);
+    this.searchText = '';
+    this.customers = this.allCustomers;
     this.router.navigate(['/customers/view', id]);
   }
 

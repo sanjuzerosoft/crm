@@ -17,6 +17,9 @@ import { Leadassigneeadd } from './masters/leadassignee/leadassigneeadd/leadassi
 import { Industrytypelist } from './masters/industrytype/industrytypelist/industrytypelist';
 import { Industrytypeadd } from './masters/industrytype/industrytypeadd/industrytypeadd';
 
+import { Projectlist } from './masters/project/projectlist/projectlist';
+import { Projectadd } from './masters/project/projectadd/projectadd';
+
 
 
 
@@ -49,10 +52,14 @@ export const routes: Routes = [
       { path: 'IndustryType/add', component: Industrytypeadd },
       { path: 'IndustryType/add/:id', component: Industrytypeadd },
 
+      { path: 'project', component: Projectlist },
+      { path: 'project/add', component: Projectadd },
+      { path: 'project/add/:id', component: Projectadd },
+
     ]
   },
 
-  { path: '**', redirectTo: 'login' },
+  // { path: '**', redirectTo: 'login' },
   
   
 ];
