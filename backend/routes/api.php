@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeadAssigneeController;
 use App\Http\Controllers\IndustryTypeController;
+use App\Http\Controllers\ProjectController;
 
 
 use Illuminate\Support\Facades\Mail;
@@ -53,7 +54,7 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::get('/dashboard-report', [DashboardController::class, 'dashboardReport']);
 
 // master
-// -lead assignee
+// lead assignee
 Route::get('/lead-assignees', [LeadAssigneeController::class, 'index']);
 Route::get('/lead-assignees/{id}', [LeadAssigneeController::class, 'show']);
 Route::post('/lead-assignees', [LeadAssigneeController::class, 'store']);
@@ -65,7 +66,12 @@ Route::post('/industry-types', [IndustryTypeController::class, 'store']);
 Route::get('/industry-types/{id}', [IndustryTypeController::class, 'show']);
 Route::put('/industry-types/{id}', [IndustryTypeController::class, 'update']);
 Route::delete('/industry-types/{id}', [IndustryTypeController::class, 'destroy']);
-
+// project
+Route::get('/projects', [ProjectController::class, 'index']);
+Route::post('/projects', [ProjectController::class, 'store']);
+Route::get('/projects/{id}', [ProjectController::class, 'show']);
+Route::put('/projects/{id}', [ProjectController::class, 'update']);
+Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
 
 
 Route::middleware(['jwt.auth'])->group(function () { //jwt.aut is use to JWT

@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 
 class LeadAssigneeController extends Controller
 {
-     public function index()
+     public function index(Request $request)
     {
-        return leadassignee::all();
+        $query = leadassignee::query();
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+
+            $query->where('name', 'like', "%$search%");
+        }
+        return $query->latest()->get();
     }
     public function store(Request $request)
     {

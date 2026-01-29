@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\IndustryType;
+use App\Models\Project;
 
-class IndustryTypeController extends Controller
+class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $query = IndustryType::query();
+        $query= Project::query();
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
 
@@ -17,75 +17,67 @@ class IndustryTypeController extends Controller
         }
         return $query->latest()->get();
     }
-
-    // 2️⃣ Store industry type
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:industry_types,name',
+            'name' => 'required',
         ]);
 
-        $type = IndustryType::create([
+        $project = Project::create([
             'name' => $request->name,
             'status' => $request->status ?? 1
         ]);
 
         return response()->json([
             'status' => true,
-            'message' => 'Industry type created successfully',
-            'data' => $type
+            'message' => 'Project created successfully',
+            'data' => $project
         ]);
     }
-
-    // 3️⃣ Get single industry type
     public function show($id)
     {
 
-        return IndustryType::findOrFail($id);
+        return Project::findOrFail($id);
     }
-
-    // 4️⃣ Update industry type
     public function update(Request $request, $id)
     {
-        $type = IndustryType::find($id);
+        $project = Project::find($id);
 
-        if (!$type) {
+        if (!$project) {
             return response()->json([
                 'status' => false,
-                'message' => 'Industry type not found'
+                'message' => 'Project not found'
             ], 404);
         }
 
         $request->validate([
-            'name' => 'required|unique:industry_types,name,' . $id,
+            'name' => 'required',
         ]);
 
-        $type->update($request->only('name', 'status'));
+        $project->update($request->only('name', 'status'));
 
         return response()->json([
             'status' => true,
-            'message' => 'Industry type updated successfully',
-            'data' => $type
+            'message' => 'Project updated successfully',
+            'data' => $project
         ]);
     }
-
-    // 5️⃣ Delete industry type
     public function destroy($id)
     {
-        $type = IndustryType::find($id);
+        $project = Project::find($id);
 
-        if (!$type) {
+        if (!$project) {
             return response()->json([
                 'status' => false,
-                'message' => 'Industry type not found'
+                'message' => 'Project not found'
             ], 404);
         }
 
-        $type->delete();
+        $project->delete();
 
         return response()->json([
             'status' => true,
-            'message' => 'Industry type deleted successfully'
+            'message' => 'Project deleted successfully'
         ]);
     }
 }
