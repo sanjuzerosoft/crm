@@ -24,7 +24,8 @@ class LeadAssigneeController extends Controller
             'code' => 'required|unique:leadassignees,code',
             'email' => 'required|email|unique:leadassignees,email',
             'mobile_number' => 'required',
-            'role' => 'required'
+            'role' => 'required',
+            'status' => 'required'
         ]);
 
         $assignee = leadassignee::create($request->all());

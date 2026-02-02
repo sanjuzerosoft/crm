@@ -29,4 +29,13 @@ class Customer extends Model
         'zip_code',
         'description',
     ];
+    public function assignee()
+    {
+        return $this->belongsTo(leadassignee::class, 'lead_assignee');
+    }
+
+    public function industry()
+    {
+        return $this->belongsTo(IndustryType::class, 'industry_type');
+    }
 }

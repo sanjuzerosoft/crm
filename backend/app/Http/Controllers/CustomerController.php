@@ -13,7 +13,7 @@ class CustomerController extends Controller
     // }
     public function index(Request $request)
     {
-        $query = Customer::query();
+        $query = Customer::with(['assignee', 'industry']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -55,7 +55,7 @@ class CustomerController extends Controller
     // VIEW single customer
     public function show($id)
     {
-        return Customer::findOrFail($id);
+        return Customer::with(['assignee', 'industry'])->find($id);
     }
 
     // UPDATE customer

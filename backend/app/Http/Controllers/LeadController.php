@@ -14,7 +14,7 @@ class LeadController extends Controller
     // }
     public function index(Request $request)
 {
-    $query = LeadData::query();
+    $query = LeadData::with(['assignee', 'industry']);
 
     if ($request->has('search') && $request->search != '') {
         $search = $request->search;
@@ -57,7 +57,8 @@ class LeadController extends Controller
     // VIEW single lead
     public function show($id)
     {
-        return LeadData::findOrFail($id);
+        return LeadData::with(['assignee', 'industry'])->find($id);
+        
     }
 
     // UPDATE lead
