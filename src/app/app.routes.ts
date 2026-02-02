@@ -10,6 +10,11 @@ import { Customerslist } from './customers/customerslist/customerslist';
 import { Customersadd } from './customers/customersadd/customersadd';
 import { Customersview } from './customers/customersview/customersview';
 
+import { Activitylist } from './activity/activitylist/activitylist';
+import { Activityadd } from './activity/activityadd/activityadd';
+import { Activityview } from './activity/activityview/activityview';
+
+
 //Masters
 import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadassigneelist';
 import { Leadassigneeadd } from './masters/leadassignee/leadassigneeadd/leadassigneeadd';
@@ -42,6 +47,11 @@ export const routes: Routes = [
       { path: 'customers/add', component: Customersadd },
       { path: 'customers/add/:id', component: Customersadd },
       { path: 'customers/view/:id', component: Customersview },
+
+      {path: 'activity', component: Activitylist },
+      {path: 'activity/add', component: Activityadd },
+      {path: 'activity/add/:id', component: Activityadd },
+      {path: 'activity/view/:id', component: Activityview },
 
       //Masters
       { path: 'leadassignee', component: Leadassigneelist },

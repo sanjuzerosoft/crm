@@ -1,0 +1,63 @@
+<div class="wrapper">
+  <!-- HEADER -->
+  <div class="container header-container">
+    <div class="header">
+      <h1>activity Details</h1>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn back" (click)="goBack()">Back</button>
+      <button class="btn edit" (click)="goToEdit()">Edit</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="view-layout">
+    <!-- LEFT -->
+    <div class="container card">
+      <h3 class="card-title">Basic Information</h3>
+
+      <div class="info-grid">
+        <div>
+          <span>Type</span>
+          <p>{{ activities?.type }}</p>
+        </div>
+        <div>
+          <span>Project</span>
+          <p>{{ activities?.project?.name || '-' }}</p>
+        </div>
+        <div>
+          <span>Date</span>
+          <p>{{ activities?.activity_date }}</p>
+        </div>
+        <div>
+          <span>Status</span>
+          <p>{{ activities?.status }}</p>
+        </div>
+        <div>
+          <span>Lead</span>
+          <p>
+            {{
+              activities?.lead ? activities.lead.first_name + ' ' + activities.lead.last_name : '-'
+            }}
+          </p>
+        </div>
+        <div>
+          <span>Customer</span>
+          <p>
+            {{
+              activities?.customer
+                ? activities.customer.first_name + ' ' + activities.customer.last_name
+                : '-'
+            }}
+          </p>
+        </div>
+
+        <div>
+          <span>Description</span>
+          <p>{{ activities?.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
