@@ -24,8 +24,8 @@
         <div><span>Email</span><p>{{ leads?.email }}</p></div>
         <div><span>Mobile</span><p>{{ leads?.mobile }}</p></div>
         <div><span>Company</span><p>{{ leads?.company_name }}</p></div>
-        <div><span>Industry</span><p>{{ leads?.industry_type }}</p></div>
-        <div><span>Assignee</span><p>{{ leads?.lead_assignee }}</p></div>
+        <div><span>Industry</span><p>{{ leads?.industry?leads.industry.name:"-"}}</p></div>
+        <div><span>Assignee</span><p>{{ leads?.assignee?leads.assignee.name:"-" }}</p></div>
         <div><span>Source</span><p>{{ leads?.lead_source }}</p></div>
         <div><span>Website</span><p>{{ leads?.website }}</p></div>
       </div>
