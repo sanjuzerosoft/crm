@@ -19,6 +19,9 @@ export class Leadsadd implements OnInit {
 
   leadId: number | null = null;  
 
+  assignee :any [] = [];
+  industry : any [] = [];
+
   lead = {
     first_name: '',
     last_name: '',
@@ -48,9 +51,51 @@ export class Leadsadd implements OnInit {
   ) {}  
   ngOnInit(): void {
     this.leadId = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.loadassignee();
+    this.loadindustry();
+
     if (this.leadId) {
       this.loadLeadForEdit(this.leadId);
     }
+  }
+
+  loadassignee(){
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      Authorization : `Bearer ${token}`
+    })
+
+    this.http
+    .get<any[]>(`${this.authService.apiUrl}/lead-assignees`,{headers}).subscribe({
+      next: (data) => {
+          this.assignee = data;
+          console.log('Assignee_:', this.assignee);
+      },
+      error:(err) =>{
+        console.log('Error loading assignee:', err);
+      }
+    })
+  }
+
+  loadindustry(){
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      Authorization : `Bearer ${token}`
+    })
+
+    this.http
+    .get<any[]>(`${this.authService.apiUrl}/industry-types`,{headers}).subscribe({
+      next: (data) => {
+          this.industry = data;
+          console.log('industry:', this.industry);
+      },
+      error:(err) =>{
+        console.log('Error loading industry:', err);
+      }
+    })
   }
 
   loadLeadForEdit(id: number) {

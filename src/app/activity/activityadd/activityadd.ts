@@ -84,8 +84,9 @@ export class Activityadd implements OnInit {
     });
   }
   loadProjects() {
-    const tocken = this.authService.getToken();
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({});
+    // const headers = new HttpHeaders({Authorization: `Bearer ${token}`,});
     this.http.get<any[]>(`${this.authService.apiUrl}/projects`, { headers }).subscribe({
       next: (data) => {
         this.projects = data;

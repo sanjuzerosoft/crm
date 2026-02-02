@@ -47,7 +47,12 @@
 
           <div class="form-group">
             <label>Lead Assignee</label>
-            <input type="text" name="lead_assignee" [(ngModel)]="lead.lead_assignee" />
+            <select name="lead_assignee"
+            [(ngModel)]="lead.lead_assignee"
+            required="">
+            <option value="">Select Assignee</option>
+            <option *ngFor="let assignees of assignee" [value]="assignees.id">{{assignees.name}}</option>
+          </select>
           </div>
 
           <div class="form-group">
@@ -82,7 +87,12 @@
 
           <div class="form-group">
             <label>Industry Type</label>
-            <input type="text" name="industry_type" [(ngModel)]="lead.industry_type" />
+            <select name="industry_type"
+            [(ngModel)]="lead.industry_type"
+            required="">
+            <option value="">Select Industry Type</option>
+            <option *ngFor="let industrys of industry" [value]="industrys.id">{{industrys.name}}</option>
+          </select>
           </div>
 
           <div class="form-group">

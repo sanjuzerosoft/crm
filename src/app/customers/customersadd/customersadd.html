@@ -50,7 +50,12 @@
 
           <div class="form-group">
             <label>customer Assignee</label>
-            <input type="text" name="customer_assignee" [(ngModel)]="customer.customer_assignee" />
+            <select name="customer_assignee"
+            [(ngModel)]="customer.customer_assignee"
+            required="">
+            <option value="">Select Assignee</option>
+            <option *ngFor="let assignees of assignee" [value]="assignees.id">{{assignees.name}}</option>
+          </select>
           </div>
 
           <div class="form-group">
@@ -85,7 +90,12 @@
 
           <div class="form-group">
             <label>Industry Type</label>
-            <input type="text" name="industry_type" [(ngModel)]="customer.industry_type" />
+            <select name="industry_type"
+            [(ngModel)]="customer.industry_type"
+            required="">
+            <option value="">Select Industry Type</option>
+            <option *ngFor="let industrys of industry" [value]="industrys.id">{{industrys.name}}</option>
+          </select>
           </div>
 
           <div class="form-group">
@@ -160,6 +170,3 @@
     </div>
   </form>
 </div>
-
-
-6174

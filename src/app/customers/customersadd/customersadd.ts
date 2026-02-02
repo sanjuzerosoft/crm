@@ -17,6 +17,9 @@ import { Auth } from '../../services/auth';
 export class Customersadd implements OnInit{
 
   customerId: number | null = null;
+  
+  assignee :any [] = [];
+  industry : any [] = [];
 
   customer = {
     first_name: '',
@@ -48,9 +51,51 @@ export class Customersadd implements OnInit{
 
   ngOnInit(): void {
     this.customerId = Number(this.route.snapshot.paramMap.get('id'));
+    
+    this.loadassignee();
+    this.loadindustry();
+
     if (this.customerId) {
       this.loadCustomerForEdit(this.customerId);
     }
+  }
+  
+  loadassignee(){
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      Authorization : `Bearer ${token}`
+    })
+
+    this.http
+    .get<any[]>(`${this.authService.apiUrl}/lead-assignees`,{headers}).subscribe({
+      next: (data) => {
+          this.assignee = data;
+          console.log('Assignee_:', this.assignee);
+      },
+      error:(err) =>{
+        console.log('Error loading assignee:', err);
+      }
+    })
+  }
+
+  loadindustry(){
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      Authorization : `Bearer ${token}`
+    })
+
+    this.http
+    .get<any[]>(`${this.authService.apiUrl}/industry-types`,{headers}).subscribe({
+      next: (data) => {
+          this.industry = data;
+          console.log('industry:', this.industry);
+      },
+      error:(err) =>{
+        console.log('Error loading industry:', err);
+      }
+    })
   }
 
   loadCustomerForEdit(id: number) {
