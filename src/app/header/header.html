@@ -16,10 +16,36 @@
     <div class="flex items-center gap-6">
       <img src="faq.png" style="cursor: pointer;" title="Master" class="h-8 w-auto" alt="FAQ" (click)="masters()">
       <img src="notification.png" class="h-8 w-auto" alt="Notification">
-      <img src="profile.png" class="h-8 w-auto" alt="Profile">
+      <img src="profile.png" class="h-8 w-auto" alt="Profile" style="cursor: pointer;" (click)="toggleProfileModal()">
     </div>
   </div>
 
 </div>
 
+</div>
+
+<!-- Profile Modal -->
+<div class="modal-overlay" *ngIf="showProfileModal" (click)="closeProfileModal()">
+  <div class="profile-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Profile Settings</h3>
+      <button class="close-btn" (click)="closeProfileModal()">&times;</button>
+    </div>
+    <div class="modal-content">
+      <div class="modal-option" (click)="changeProfile()">
+        <img src="user.png" alt="Change Profile" class="option-icon">
+        <span>Change Profile </span>
+      </div>
+      
+      <div class="modal-option" (click)="changePassword()">
+        <img src="padlock.png" alt="Change Password" class="option-icon">
+        <span>Change Password</span>
+      </div>
+      <div class="modal-divider"></div>
+      <div class="modal-option logout-option" (click)="logout()">
+        <img src="exit.png" alt="Logout" class="option-icon">
+        <span>Logout</span>
+      </div>
+    </div>
+  </div>
 </div>

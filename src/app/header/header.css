@@ -16,3 +16,119 @@
     background-color: #ffffff;
     border-radius: 100px;
 }
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.profile-modal {
+    position: fixed;
+    top: 12%;
+    right: 1%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 340px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+    z-index: 1001;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.close-btn:hover {
+    color: #cd1c18;
+}
+
+.modal-content {
+    padding: 8px 0;
+}
+
+.modal-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-option:hover {
+    background-color: #f5f5f5;
+}
+
+.option-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.modal-option span {
+    font-size: 16px;
+    color: #333;
+}
+
+.modal-divider {
+    height: 1px;
+    background-color: #e5e5e5;
+    margin: 8px 0;
+}
+
+/* Logout Option Styles */
+.logout-option {
+    color: #cd1c18;
+}
+
+.logout-option:hover {
+    background-color: #ffe6e5;
+}
+
+.logout-option span {
+    color: #cd1c18;
+    font-weight: 500;
+}
+
+.logout-option .option-icon {
+    filter: brightness(0) saturate(100%) invert(22%) sepia(89%) saturate(3247%) hue-rotate(353deg) brightness(91%) contrast(96%);
+}
