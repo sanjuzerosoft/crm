@@ -3,6 +3,7 @@
     width: 100vw;
     height: auto;
     padding: 24px;
+    position: relative;
 }
 
 .logo_text{
@@ -30,8 +31,8 @@
 
 .profile-modal {
     position: fixed;
-    top: 12%;
-    right: 1%;
+    top: calc(76px + 20px); /* Header height (24px padding * 2 + ~28px content) + 20px gap */
+    right: 2%;
     background-color: #ffffff;
     border-radius: 8px;
     width: 340px;
