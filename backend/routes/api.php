@@ -12,6 +12,7 @@ use App\Http\Controllers\LeadAssigneeController;
 use App\Http\Controllers\IndustryTypeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ActivityDataController;
+use App\Http\Controllers\ReportController;
 
 
 use Illuminate\Support\Facades\Mail;
@@ -80,6 +81,10 @@ Route::post('/activities', [ActivityDataController::class, 'store']);
 Route::get('/activities/{id}', [ActivityDataController::class, 'show']);
 Route::put('/activities/{id}', [ActivityDataController::class, 'update']);
 Route::delete('/activities/{id}', [ActivityDataController::class, 'destroy']);
+
+// Reports
+Route::get('/activity-report', [ReportController::class, 'activityReport']);
+
 Route::middleware(['jwt.auth'])->group(function () { //jwt.aut is use to JWT
 
     Route::get('/leads', [LeadController::class, 'index']);
