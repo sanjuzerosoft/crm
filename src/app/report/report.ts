@@ -53,7 +53,7 @@ export class Report implements OnInit {
       from_date: this.reports.from_date ? this.reports.from_date : '',
       to_date: this.reports.to_date ? this.reports.to_date : '',
       type: this.reports.type ? this.reports.type : '',
-      activity_status: this.reports.activity_status ? this.reports.activity_status : '',
+      active_status: this.reports.activity_status ? this.reports.activity_status : '',
       project_id: this.reports.project_id ? this.reports.project_id : '',
 
       // lead_id: this.reports.lead_id ? this.reports.lead_id : null,
@@ -81,8 +81,22 @@ export class Report implements OnInit {
       });
   }
 
+  loadProjects() {
+    const token = this.authService.getToken(); 
+    // const headers = new HttpHeaders({});
+    const headers = new HttpHeaders({Authorization: `Bearer ${token}`,});
+    this.http.get<any[]>(`${this.authService.apiUrl}/projects`, { headers }).subscribe({
+      next: (data) => {
+        this.projects = data;
+      },
+      error: (err) => {
+        console.error('Error loading projects:', err);
+      },
+    });
+  }
   ngOnInit() {
     this.getReport();
+    this.loadProjects();
   }
   onFilterChange() {
     this.getReport();
