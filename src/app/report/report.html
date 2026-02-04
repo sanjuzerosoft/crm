@@ -1,0 +1,128 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="page-title">
+          Total Reports - <span class="count">({{ totalreports }})</span>
+        </div>
+      </div>
+
+      <div>
+        <!-- <div class="toolbar">
+          <button class="add-btn" >
+            <img src="generate.png" alt="Generate" class="btn-icon" />
+            Generate Report
+          </button>
+        </div> -->
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="form-group">
+        <label>From Date</label>
+        <input type="date" [(ngModel)]="reports.from_date" (ngModelChange)="onFilterChange()" />
+      </div>
+
+      <div class="form-group">
+        <label>To Date</label>
+        <input type="date" [(ngModel)]="reports.to_date" (ngModelChange)="onFilterChange()" />
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="reports.activity_status" (ngModelChange)="onFilterChange()">
+          <option value="">Select Status</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Type</label>
+        <select [(ngModel)]="reports.type" (ngModelChange)="onFilterChange()">
+          <option value="">Select Type</option>
+          <option value="mail">Email</option>
+          <option value="call">Call</option>
+          <option value="meeting">Meeting</option>
+          <option value="demo">Demo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Project</label>
+        <select [(ngModel)]="reports.project_id" (ngModelChange)="onFilterChange()">
+          <option value="">Select Project</option>
+          <option *ngFor="let project of projects" [value]="project.id">
+            {{ project.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group btn-group">
+        <button class="add-btn">
+          <img src="./generate.png" class="btn-icon" />
+          Generate
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="customers-table">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Type</th>
+
+            <th>Date</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Lead</th>
+            <th>Customer</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let reports of report; let i = index" class="clickable-row">
+            <td>{{ i + 1 }}</td>
+            <td>{{ reports.type }}</td>
+            <td>{{ reports.activity_date }}</td>
+            <td>{{ reports.project?.name ? reports.project?.name : '-' }}</td>
+            <td>
+              <span
+                class="status"
+                [ngClass]="{
+                  sucess: reports.status === 'completed',
+                  danger: reports.status === 'cancelled',
+                  waiting: reports.status === 'scheduled',
+                }"
+                >{{ reports.status }}</span
+              >
+            </td>
+            <td>
+              {{ reports.lead?.first_name ? reports.lead?.first_name : '-' }}
+              {{ reports.lead?.last_name }}
+            </td>
+            <td>
+              {{ reports.customer?.first_name ? reports.customer?.first_name : '-' }}
+              {{ reports.customer?.last_name }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-backdrop" *ngIf="showDeletePopup">
+        <div class="modal">
+          <h3>Confirm Delete</h3>
+          <p>Are you sure you want to delete this lead?</p>
+
+          <div class="modal-actions">
+            <!-- <button class="btn cancel" (click)="closeDeletePopup()">No</button>
+            <button class="btn delete" (click)="confirmDelete()">Yes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="page-loader">
+    <div class="spinner"></div>
+  </div>
+</div>

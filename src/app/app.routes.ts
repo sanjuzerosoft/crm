@@ -14,6 +14,9 @@ import { Activitylist } from './activity/activitylist/activitylist';
 import { Activityadd } from './activity/activityadd/activityadd';
 import { Activityview } from './activity/activityview/activityview';
 
+// Report
+import { Report } from './report/report';
+
 
 //Masters
 import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadassigneelist';
@@ -53,6 +56,8 @@ export const routes: Routes = [
       {path: 'activity/add/:id', component: Activityadd },
       {path: 'activity/view/:id', component: Activityview },
 
+      // Report
+      {path: 'report', component: Report },
       //Masters
       { path: 'leadassignee', component: Leadassigneelist },
       { path: 'leadassignee/add', component: Leadassigneeadd },
