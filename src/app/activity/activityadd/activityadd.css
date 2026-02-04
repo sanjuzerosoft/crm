@@ -87,7 +87,6 @@ body {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
-  transition: 0.2s ease;
 }
 
 .form-group input:focus,
@@ -98,24 +97,38 @@ body {
   box-shadow: 0 0 0 3px rgba(205, 28, 24, 0.12);
 }
 
-textarea {
-  resize: vertical;
-  min-height: 90px;
+/* Radio Group */
+.radio-group {
+  display: flex;
+  gap: 12px;
 }
 
-/* Errors */
-.error small {
-  color: #e53935;
-  margin-top: 4px;
-  font-size: 12px;
+.radio-card {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  background: #f9fafb;
+  transition: all 0.2s ease;
 }
 
-input.ng-invalid.ng-touched,
-textarea.ng-invalid.ng-touched {
-  border-color: #e53935;
+.radio-card input {
+  display: none;
 }
 
-/* Buttons (Stylish) */
+.radio-card span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.radio-card:has(input:checked) {
+  border-color: #cd1c18;
+  background: rgba(205, 28, 24, 0.08);
+}
+
+/* Buttons */
 .red-btn {
   padding: 10px 18px;
   border-radius: 8px;
@@ -124,21 +137,13 @@ textarea.ng-invalid.ng-touched {
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .red-btn:hover {
   background: #111827;
   color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 }
 
-.red-btn:active {
-  transform: translateY(0);
-}
-
-/* Disabled */
 .red-btn[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
@@ -146,22 +151,9 @@ textarea.ng-invalid.ng-touched {
 
 /* Mobile */
 @media (max-width: 768px) {
-  .wrapper {
-    padding: 14px;
-  }
-
-  .header-container,
-  .container {
-    padding: 18px;
-  }
-
   .form-actions {
     flex-direction: column;
     gap: 12px;
-  }
-
-  .right-actions {
-    width: 100%;
   }
 
   .red-btn {

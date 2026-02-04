@@ -2,8 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Auth } from '../../services/auth';
 
@@ -15,9 +14,12 @@ import { Auth } from '../../services/auth';
 })
 export class Activityadd implements OnInit {
   activityId: number | null = null;
+
   customers: any[] = [];
   leads: any[] = [];
   projects: any[] = [];
+
+  selectedParty: 'lead' | 'customer' = 'lead';
 
   activity = {
     type: '',
@@ -36,120 +38,88 @@ export class Activityadd implements OnInit {
     private cdr: ChangeDetectorRef,
     private authService: Auth,
   ) {}
+
   ngOnInit(): void {
     this.activityId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!this.activityId) {
-      const today = new Date().toISOString().split('T')[0];
-      this.activity.activity_date = today;
+      this.activity.activity_date = new Date().toISOString().split('T')[0];
     }
 
     this.loadCustomers();
     this.loadLeads();
     this.loadProjects();
+
     if (this.activityId) {
       this.loadActivityForEdit(this.activityId);
     }
   }
 
+  onPartyChange(value: 'lead' | 'customer') {
+    this.selectedParty = value;
+    if (value === 'lead') {
+      this.activity.customer_id = '';
+    } else {
+      this.activity.lead_id = '';
+    }
+  }
+
   loadCustomers() {
-    const token = this.authService.getToken();
-
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.authService.getToken()}`,
     });
 
-    this.http.get<any[]>(`${this.authService.apiUrl}/customers`, { headers }).subscribe({
-      next: (data) => {
-        this.customers = data;
-        console.log('Customers_:', this.customers);
-      },
-      error: (err) => {
-        console.error('Error loading customers:', err);
-      },
-    });
+    this.http.get<any[]>(`${this.authService.apiUrl}/customers`, { headers })
+      .subscribe(data => this.customers = data);
   }
+
   loadLeads() {
-    const tocken = this.authService.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${tocken}`,
+      Authorization: `Bearer ${this.authService.getToken()}`,
     });
-    this.http.get<any[]>(`${this.authService.apiUrl}/leads`, { headers }).subscribe({
-      next: (data) => {
-        this.leads = data;
-      },
-      error: (err) => {
-        console.error('Error loading leads:', err);
-      },
-    });
+
+    this.http.get<any[]>(`${this.authService.apiUrl}/leads`, { headers })
+      .subscribe(data => this.leads = data);
   }
+
   loadProjects() {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({});
-    // const headers = new HttpHeaders({Authorization: `Bearer ${token}`,});
-    this.http.get<any[]>(`${this.authService.apiUrl}/projects`, { headers }).subscribe({
-      next: (data) => {
-        this.projects = data;
-      },
-      error: (err) => {
-        console.error('Error loading projects:', err);
-      },
-    });
+    this.http.get<any[]>(`${this.authService.apiUrl}/projects`)
+      .subscribe(data => this.projects = data);
   }
 
   loadActivityForEdit(id: number) {
-    const token = this.authService.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.authService.getToken()}`,
     });
 
-    this.http.get<any>(`${this.authService.apiUrl}/activities/${id}`, { headers }).subscribe({
-      next: (data) => {
+    this.http.get<any>(`${this.authService.apiUrl}/activities/${id}`, { headers })
+      .subscribe(data => {
         this.activity = data;
-        console.log('Edit Activity Data:', this.activity);
+        this.selectedParty = data.lead_id ? 'lead' : 'customer';
         this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error fetching activity:', err);
-      },
-    });
+      });
   }
 
   async saveActivity() {
-    const token = this.authService.getToken();
-
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.authService.getToken()}`,
     });
-    console.log('Activity saved successfully:', this.activity);
-    try {
-      const response = await firstValueFrom(
-        this.http.post(`${this.authService.apiUrl}/activities`, this.activity, { headers }),
-      );
-      console.log('Activity saved successfully:', response);
-      this.router.navigate(['/activity']);
-    } catch (error) {
-      console.error('Error saving activity:', error);
-    }
+
+    await firstValueFrom(
+      this.http.post(`${this.authService.apiUrl}/activities`, this.activity, { headers })
+    );
+    this.router.navigate(['/activity']);
   }
-  async updateActivity(activityId: number) {
-    const token = this.authService.getToken();
 
+  async updateActivity(id: number) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.authService.getToken()}`,
     });
-    console.log('Activity updated successfully:', this.activity);
-    try {
-      const response = await firstValueFrom(
-        this.http.put(`${this.authService.apiUrl}/activities/${activityId}`, this.activity, {
-          headers,
-        }),
-      );
-      console.log('Activity updated successfully:', response);
-      this.router.navigate(['/activity']);
-    } catch (error) {
-      console.error('Error updating activity:', error);
-    }
+
+    await firstValueFrom(
+      this.http.put(`${this.authService.apiUrl}/activities/${id}`, this.activity, { headers })
+    );
+    this.router.navigate(['/activity']);
   }
 
   clearForm() {
@@ -162,6 +132,7 @@ export class Activityadd implements OnInit {
       customer_id: '',
       description: '',
     };
+    this.selectedParty = 'lead';
   }
 
   goBack() {

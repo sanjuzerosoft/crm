@@ -5,16 +5,25 @@
       <h1>{{ activityId ? 'Edit Activity' : 'Add Activity' }}</h1>
     </div>
 
-    <!-- ACTIONS -->
     <div class="form-actions">
       <button type="button" class="red-btn" (click)="goBack()">Back</button>
 
       <div class="right-actions">
-        <button type="button" class="red-btn" (click)="clearForm()" *ngIf="!activityId">
+        <button
+          type="button"
+          class="red-btn"
+          (click)="clearForm()"
+          *ngIf="!activityId"
+        >
           Clear
         </button>
 
-        <button type="submit" form="activityForm" class="red-btn" [disabled]="activityForm.invalid">
+        <button
+          type="submit"
+          form="activityForm"
+          class="red-btn"
+          [disabled]="activityForm.invalid"
+        >
           {{ activityId ? 'Update' : 'Save' }}
         </button>
       </div>
@@ -57,7 +66,12 @@
         <!-- Date -->
         <div class="form-group">
           <label>Date</label>
-          <input type="date" name="activity_date" [(ngModel)]="activity.activity_date" required />
+          <input
+            type="date"
+            name="activity_date"
+            [(ngModel)]="activity.activity_date"
+            required
+          />
         </div>
 
         <!-- Status -->
@@ -71,10 +85,38 @@
           </select>
         </div>
 
-        <!-- Lead -->
+        <!-- Lead / Customer Toggle -->
         <div class="form-group">
+          <label>Related To</label>
+          <div class="radio-group">
+            <label class="radio-card">
+              <input
+                type="radio"
+                name="partyType"
+                value="lead"
+                [(ngModel)]="selectedParty"
+                (change)="onPartyChange('lead')"
+              />
+              <span>Lead</span>
+            </label>
+
+            <label class="radio-card">
+              <input
+                type="radio"
+                name="partyType"
+                value="customer"
+                [(ngModel)]="selectedParty"
+                (change)="onPartyChange('customer')"
+              />
+              <span>Customer</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Lead -->
+        <div class="form-group" *ngIf="selectedParty === 'lead'">
           <label>Lead</label>
-          <select name="lead_id" [(ngModel)]="activity.lead_id">
+          <select name="lead_id" [(ngModel)]="activity.lead_id" required>
             <option value="">Select Lead</option>
             <option *ngFor="let lead of leads" [value]="lead.id">
               {{ lead.first_name }} {{ lead.last_name }}
@@ -83,9 +125,9 @@
         </div>
 
         <!-- Customer -->
-        <div class="form-group">
+        <div class="form-group" *ngIf="selectedParty === 'customer'">
           <label>Customer</label>
-          <select name="customer_id" [(ngModel)]="activity.customer_id">
+          <select name="customer_id" [(ngModel)]="activity.customer_id" required>
             <option value="">Select Customer</option>
             <option *ngFor="let customer of customers" [value]="customer.id">
               {{ customer.first_name }} {{ customer.last_name }}
@@ -96,7 +138,10 @@
         <!-- Description -->
         <div class="form-group">
           <label>Description</label>
-          <textarea name="description" [(ngModel)]="activity.description" rows="3"></textarea>
+          <textarea
+            name="description"
+            [(ngModel)]="activity.description"
+          ></textarea>
         </div>
       </div>
     </div>

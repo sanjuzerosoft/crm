@@ -31,7 +31,7 @@
 
 .profile-modal {
     position: fixed;
-    top: calc(76px + 20px); /* Header height (24px padding * 2 + ~28px content) + 20px gap */
+    top: calc(76px + 20px); 
     right: 2%;
     background-color: #ffffff;
     border-radius: 8px;
@@ -95,6 +95,7 @@
     cursor: pointer;
     transition: background-color 0.2s;
 }
+
 
 .modal-option:hover {
     background-color: #f5f5f5;
