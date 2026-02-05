@@ -4,10 +4,13 @@
       <h1>Create an Account</h1>
       <p class="subtitle">Join ZeroSoft CRM Admin Dashboard</p>
     </div>
-
     
-
     <form class="register-form">
+      <!-- General Error Message -->
+      <div *ngIf="generalError" class="error-message general-error">
+        {{ generalError }}
+      </div>
+
       <div class="form-group">
         <label for="fullName">Full Name</label>
         <input
@@ -16,7 +19,10 @@
           placeholder="Enter your full name"
           [(ngModel)]="fullName"
           name="fullName"
+          (blur)="validateFullName()"
+          [class.input-error]="fullNameError"
         />
+        <span *ngIf="fullNameError" class="error-message">{{ fullNameError }}</span>
       </div>
 
       <div class="form-group">
@@ -27,46 +33,77 @@
           placeholder="Enter your email"
           [(ngModel)]="email"
           name="email"
+          (blur)="validateEmail()"
+          [class.input-error]="emailError"
         />
+        <span *ngIf="emailError" class="error-message">{{ emailError }}</span>
       </div>
 
-      <div class="form-row">
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      id="password"
-      type="password"
-      placeholder="Enter your password"
-      [(ngModel)]="password"
-      name="password"
-    />
-  </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input-wrapper">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Enter your password"
+            [(ngModel)]="password"
+            name="password"
+            (blur)="validatePassword()"
+            [class.input-error]="passwordError"
+          />
+          <img 
+            [src]="showPassword ? '/hide.png' : '/show.png'" 
+            alt="Toggle password visibility"
+            class="toggle-password-icon"
+            (click)="togglePasswordVisibility()"
+          />
+        </div>
+        <span *ngIf="passwordError" class="error-message">{{ passwordError }}</span>
+      </div>
 
-  <div class="form-group">
-    <label for="confirmPassword">Confirm Password</label>
-    <input
-      id="confirmPassword"
-      type="password"
-      placeholder="Re-enter your password"
-      [(ngModel)]="confirmPassword"
-      name="confirmPassword"
-    />
-  </div>
-</div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-input-wrapper">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            placeholder="Re-enter your password"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            (blur)="validateConfirmPassword()"
+            [class.input-error]="confirmPasswordError"
+          />
+          <img 
+            [src]="showConfirmPassword ? '/hide.png' : '/show.png'" 
+            alt="Toggle password visibility"
+            class="toggle-password-icon"
+            (click)="toggleConfirmPasswordVisibility()"
+          />
+        </div>
+        <span *ngIf="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</span>
+      </div>
 
       <div class="form-options">
-        <label class="checkbox-container">
+        <label class="checkbox-container" [class.checkbox-error]="termsError">
           <input
             type="checkbox"
             [(ngModel)]="agreeTerms"
             name="agreeTerms"
+            (change)="validateTerms()"
           />
           <span>I agree to the <a href="#" class="terms-link">Terms & Conditions</a></span>
         </label>
+        <span *ngIf="termsError" class="error-message">{{ termsError }}</span>
       </div>
 
-      <button type="button" class="btn-register" (click)="register()">
-        Sign Up
+      <button 
+        type="button" 
+        class="btn-register" 
+        (click)="register()"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Sign Up</span>
+        <span *ngIf="isLoading">Registering...</span>
       </button>
 
       <div class="login-link">

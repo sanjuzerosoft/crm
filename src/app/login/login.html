@@ -4,7 +4,13 @@
       <h1>Welcome to ZeroSoft CRM</h1>
       <p class="subtitle">Your Admin Dashboard</p>
     </div>
+    
     <form class="login-form">
+      <!-- General Error Message -->
+      <div *ngIf="generalError" class="error-message general-error">
+        {{ generalError }}
+      </div>
+
       <div class="form-group">
         <label for="email">Email Address</label>
         <input
@@ -13,18 +19,34 @@
           placeholder="Enter your email"
           [(ngModel)]="email"
           name="email"
+          (blur)="validateEmail()"
+          [class.input-error]="emailError"
         />
+        <span *ngIf="emailError" class="error-message">{{ emailError }}</span>
       </div>
+
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          placeholder="Enter your password"
-          [(ngModel)]="password"
-          name="password"
-        />
+        <div class="password-input-wrapper">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Enter your password"
+            [(ngModel)]="password"
+            name="password"
+            (blur)="validatePassword()"
+            [class.input-error]="passwordError"
+          />
+          <img 
+            [src]="showPassword ? '/hide.png' : '/show.png'" 
+            alt="Toggle password visibility"
+            class="toggle-password-icon"
+            (click)="togglePasswordVisibility()"
+          />
+        </div>
+        <span *ngIf="passwordError" class="error-message">{{ passwordError }}</span>
       </div>
+
       <div class="form-options">
         <label class="checkbox-container">
           <input
@@ -38,6 +60,7 @@
           Forgot Password ?
         </a>
       </div>
+
       <button 
         type="button" 
         class="btn-signin" 
@@ -46,10 +69,122 @@
       >
         {{ isLoading ? 'Signing In...' : 'Sign In' }}
       </button>
+
       <div class="signup-link">
         New to ZeroSoft CRM? 
         <a href="#" (click)="createAccount(); $event.preventDefault()">Create an account</a>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal-overlay" *ngIf="showForgotPasswordModal" (click)="closeForgotPasswordModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Reset Password</h2>
+      <button class="close-btn" (click)="closeForgotPasswordModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Email Input Stage -->
+      <div class="form-group">
+        <label for="reset-email">Email Address</label>
+        <input
+          id="reset-email"
+          type="email"
+          placeholder="Enter your email"
+          [(ngModel)]="resetEmail"
+          name="resetEmail"
+          [disabled]="otpSent"
+          [class.disabled]="otpSent"
+          [class.input-error]="resetEmailError"
+          (blur)="validateResetEmail()"
+        />
+        <span class="error-message" *ngIf="resetEmailError">{{ resetEmailError }}</span>
+      </div>
+
+      <!-- Send OTP Button (shown only before OTP is sent) -->
+      <button 
+        *ngIf="!otpSent"
+        type="button" 
+        class="btn-primary" 
+        (click)="sendOTP()"
+        [disabled]="isSendingOTP"
+      >
+        {{ isSendingOTP ? 'Sending...' : 'Send OTP' }}
+      </button>
+
+      <!-- OTP and Password Fields (shown after OTP is sent) -->
+      <div *ngIf="otpSent" class="reset-fields">
+        <div class="form-group">
+          <label for="otp">6-Digit OTP</label>
+          <input
+            id="otp"
+            type="text"
+            placeholder="Enter 6-digit OTP"
+            [(ngModel)]="otp"
+            name="otp"
+            maxlength="6"
+            pattern="[0-9]*"
+            [class.input-error]="otpError"
+            (blur)="validateOTP()"
+          />
+          <span class="error-message" *ngIf="otpError">{{ otpError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <div class="password-input-wrapper">
+            <input
+              id="new-password"
+              [type]="showNewPassword ? 'text' : 'password'"
+              placeholder="Enter new password"
+              [(ngModel)]="newPassword"
+              name="newPassword"
+              [class.input-error]="newPasswordError"
+              (blur)="validateNewPassword()"
+            />
+            <img 
+              [src]="showNewPassword ? '/hide.png' : '/show.png'" 
+              alt="Toggle password visibility"
+              class="toggle-password-icon"
+              (click)="toggleNewPasswordVisibility()"
+            />
+          </div>
+          <span class="error-message" *ngIf="newPasswordError">{{ newPasswordError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="password-input-wrapper">
+            <input
+              id="confirm-password"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Confirm new password"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              [class.input-error]="confirmPasswordError"
+              (blur)="validateConfirmPassword()"
+            />
+            <img 
+              [src]="showConfirmPassword ? '/hide.png' : '/show.png'" 
+              alt="Toggle password visibility"
+              class="toggle-password-icon"
+              (click)="toggleConfirmPasswordVisibility()"
+            />
+          </div>
+          <span class="error-message" *ngIf="confirmPasswordError">{{ confirmPasswordError }}</span>
+        </div>
+
+        <button 
+          type="button" 
+          class="btn-primary" 
+          (click)="resetPassword()"
+          [disabled]="isResettingPassword"
+        >
+          {{ isResettingPassword ? 'Resetting...' : 'Reset Password' }}
+        </button>
+      </div>
+    </div>
   </div>
 </div>

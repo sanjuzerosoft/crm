@@ -6,10 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Auth {
-  readonly  apiUrl = 'http://127.0.0.1:8000/api';
-  // readonly apiUrl = 'https://crm.api.zerosoft.in/api';
+  // readonly  apiUrl = 'http://127.0.0.1:8000/api';
+  readonly apiUrl = 'https://crm.api.zerosoft.in/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   register(name: string, email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, {
@@ -31,6 +31,21 @@ export class Auth {
     localStorage.setItem('auth_token', token);
     console.log('Auth Token:', localStorage.getItem('auth_token'));
 
+  }
+
+
+  // In your Auth service (services/auth.ts)
+  sendPasswordResetOTP(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(email: string, otp: string, password: string, password_confirmation: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      email,
+      otp,
+      password,
+      password_confirmation
+    });
   }
 
   // Optional: Get token from localStorage

@@ -25,17 +25,17 @@
 </div>
 
 <!-- Profile Modal -->
-<div class="modal-overlay" *ngIf="showProfileModal" (click)="closeProfileModal()">
+<div class="modal-overlay" *ngIf="showProfileModal">
   <div class="profile-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>Profile Settings</h3>
       <button class="close-btn" (click)="closeProfileModal()">&times;</button>
     </div>
     <div class="modal-content">
-      <div class="modal-option" (click)="changeProfile()">
+      <!-- <div class="modal-option" (click)="changeProfile()">
         <img src="user.png" alt="Change Profile" class="option-icon">
         <span>Change Profile </span>
-      </div>
+      </div> -->
       
       <div class="modal-option" (click)="changePassword()">
         <img src="padlock.png" alt="Change Password" class="option-icon">
@@ -46,6 +46,128 @@
         <img src="exit.png" alt="Logout" class="option-icon">
         <span>Logout</span>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" *ngIf="showPasswordModal">
+  <div class="password-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Change Password</h3>
+      <button class="close-btn" (click)="closePasswordModal()">&times;</button>
+    </div>
+    <div class="password-modal-content">
+      <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+        
+        <!-- Email Field (Read-only) -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-control" 
+            [value]="userEmail" 
+            readonly
+          >
+        </div>
+
+        <!-- Current Password -->
+        <div class="form-group">
+          <label for="currentPassword">Current Password <span class="required">*</span></label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showCurrentPassword ? 'text' : 'password'" 
+              id="currentPassword" 
+              class="form-control" 
+              formControlName="currentPassword"
+              placeholder="Enter current password"
+            >
+            <button 
+              type="button" 
+              class="toggle-password" 
+              (click)="toggleCurrentPassword()"
+            >
+              <img 
+                [src]="showCurrentPassword ? 'hide.png' : 'show.png'" 
+                alt="Toggle password visibility"
+                class="toggle-password-icon"
+              >
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+            <span *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">Current password is required</span>
+          </div>
+        </div>
+
+        <!-- New Password -->
+        <div class="form-group">
+          <label for="newPassword">New Password <span class="required">*</span></label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showNewPassword ? 'text' : 'password'" 
+              id="newPassword" 
+              class="form-control" 
+              formControlName="newPassword"
+              placeholder="Enter new password"
+            >
+            <button 
+              type="button" 
+              class="toggle-password" 
+              (click)="toggleNewPassword()"
+            >
+              <img 
+                [src]="showNewPassword ? 'hide.png' : 'show.png'" 
+                alt="Toggle password visibility"
+                class="toggle-password-icon"
+              >
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+            <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</span>
+            <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Password must be at least 8 characters</span>
+            <span *ngIf="passwordForm.get('newPassword')?.errors?.['pattern']">Password must contain uppercase, lowercase, number and special character</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password <span class="required">*</span></label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              id="confirmPassword" 
+              class="form-control" 
+              formControlName="confirmPassword"
+              placeholder="Re-enter new password"
+            >
+            <button 
+              type="button" 
+              class="toggle-password" 
+              (click)="toggleConfirmPassword()"
+            >
+              <img 
+                [src]="showConfirmPassword ? 'hide.png' : 'show.png'" 
+                alt="Toggle password visibility"
+                class="toggle-password-icon"
+              >
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched">
+            <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
+            <span>Passwords do not match</span>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closePasswordModal()">Cancel</button>
+          <button type="submit" class="btn-submit" [disabled]="passwordForm.invalid">Change Password</button>
+        </div>
+
+      </form>
     </div>
   </div>
 </div>
