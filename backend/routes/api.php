@@ -51,6 +51,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+// 
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Dashboard
 Route::get('/dashboard-report', [DashboardController::class, 'dashboardReport']);
@@ -98,7 +101,7 @@ Route::middleware(['jwt.auth'])->group(function () { //jwt.aut is use to JWT
 
     // customer
     Route::get('/customers', [CustomerController::class, 'index']);
-    
+
     Route::get('/customers/{id}', [CustomerController::class, 'show']);
 
     Route::post('/customers', [CustomerController::class, 'store']);
@@ -106,6 +109,9 @@ Route::middleware(['jwt.auth'])->group(function () { //jwt.aut is use to JWT
     Route::put('/customers/{id}', [CustomerController::class, 'update']);
 
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
+
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
+
 
 });
 

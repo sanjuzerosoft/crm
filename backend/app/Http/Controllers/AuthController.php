@@ -18,59 +18,59 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     public function register(Request $request)
-{
-    try {
-        // Validate request
-        $request->validate([
-            'name'     => 'required',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6'
-        ]);
+    {
+        try {
+            // Validate request
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6'
+            ]);
 
-        // Create user
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'status'   => 0 // unverified
-        ]);
+            // Create user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'status' => 0 // unverified
+            ]);
 
-        // Generate verification token
-        $verificationToken = Str::random(60);
-        $user->update([
-            'otp' => $verificationToken // reusing otp field
-        ]);
+            // Generate verification token
+            $verificationToken = Str::random(60);
+            $user->update([
+                'otp' => $verificationToken // reusing otp field
+            ]);
 
-        // Generate verification URL
-        $verificationUrl = URL::to('/api/verify-email?token=' . $verificationToken);
+            // Generate verification URL
+            $verificationUrl = URL::to('/api/verify-email?token=' . $verificationToken);
 
-        // Send verification email
-        Mail::to($user->email)->send(
-            new VerificationEmail($user, $verificationUrl)
-        );
+            // Send verification email
+            Mail::to($user->email)->send(
+                new VerificationEmail($user, $verificationUrl)
+            );
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User registered successfully. Please check your email to verify your account.',
-            'data'    => $user,
-        ], 201);
+            return response()->json([
+                'status' => true,
+                'message' => 'User registered successfully. Please check your email to verify your account.',
+                'data' => $user,
+            ], 201);
 
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'status'  => false,
-            'message' => 'Validation failed',
-            'errors'  => $e->errors()
-        ], 422);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
 
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-        return response()->json([
-            'status'  => false,
-            'message' => 'Something went wrong',
-            'error'   => $e->getMessage()
-        ], 500);
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
     public function verifyEmail(Request $request)
     {
         $request->validate([
@@ -135,7 +135,7 @@ class AuthController extends Controller
     //         'message' => 'OTP sent to your email. Please enter the OTP to complete login.'
     //     ]);
     // }
-    
+
     public function login(Request $request)
     {
         $request->validate([
@@ -203,4 +203,134 @@ class AuthController extends Controller
             'token' => $token
         ]);
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email not found'
+            ], 404);
+        }
+
+        // Generate OTP
+        $otp = rand(100000, 999999);
+
+        $user->update([
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10)
+        ]);
+
+        // Send OTP Mail
+        Mail::to($user->email)->send(new OtpEmail($user, $otp));
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP sent to your email'
+        ]);
+    }
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required|digits:6',
+            'password' => 'required|min:6|confirmed'
+            // expects password_confirmation
+        ]);
+
+        $user = User::where('email', $request->email)
+            ->where('otp', $request->otp)
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid OTP'
+            ], 401);
+        }
+
+        if ($user->otp_expires_at < now()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'OTP expired'
+            ], 401);
+        }
+
+        // Update password
+        $user->update([
+            'password' => Hash::make($request->password),
+            'otp' => null,
+            'otp_expires_at' => null
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password updated successfully'
+        ]);
+    }
+    // public function changePassword(Request $request)
+// {
+//     // $request->validate([
+//     //     // 'email' => 'required|email',
+//     //     // 'current_password' => 'required',
+//     //     // 'new_password_confirmation' => 'required|min:6|confirmed'
+//     // ]);
+//     return response()->json([
+//         'status' => true,
+//         'message' => 'checking password',
+//         'date' => $request->all()
+//     ], 501);
+
+    //     // $user = User::where('email', $request->email)->first();
+
+    //     // if (!$user || !Hash::check($request->current_password, $user->password)) {
+//     //     return response()->json([
+//     //         'status' => false,
+//     //         'message' => 'Current password is incorrect'
+//     //     ], 401);
+//     // }
+
+    //     // $user->update([
+//     //     'password' => Hash::make($request->new_password)
+//     // ]);
+
+    //     // return response()->json([
+//     //     'status' => true,
+//     //     'message' => 'Password changed successfully'
+//     // ]);
+// }
+
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|confirmed'
+        ]);
+
+        $user = auth()->user(); // JWT authenticated user
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Current password is incorrect'
+            ], 401);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password changed successfully'
+        ]);
+    }
+
 }
