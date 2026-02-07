@@ -1,24 +1,164 @@
-.main_header{
+/* ================= HEADER ================= */
+.main_header {
     background-color: #cd1c18;
-    width: 100vw;
-    height: auto;
-    padding: 24px;
-    position: relative;
+    width: 100%;
+    padding: 12px 20px;
 }
 
-.logo_text{
+@media (max-width: 640px) {
+    .main_header {
+        padding: 10px 14px;
+    }
+}
+
+.logo_images {
+    padding: 8px 12px;
+    background-color: #ffffff;
+    border-radius: 999px;
+}
+
+.logo_text {
     color: #ffffff;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
 }
 
-.logo_images{
-    padding: 10px 24px;
-    background-color: #ffffff;
-    border-radius: 100px;
+@media (min-width: 768px) {
+    .logo_text {
+        font-size: 20px;
+    }
 }
 
-/* Modal Styles */
+.header-icon {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+}
+
+/* ================= NOTIFICATION ================= */
+.notification-dot {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ffc107;
+    color: #000;
+    font-size: 10px;
+    font-weight: 600;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================= USER BADGE ================= */
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.user-badge:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar svg {
+    width: 18px;
+    height: 18px;
+}
+
+.user-text {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .user-text {
+        display: none; /* hide text on mobile */
+    }
+}
+
+.dropdown-icon {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+/* ================= PROFILE DROPDOWN ================= */
+.profile-dropdown {
+    position: absolute;
+    top: 46px;
+    right: 0;
+    width: 220px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 1000;
+    animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-item span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.dropdown-icon-img {
+    width: 18px;
+    height: 18px;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e5e5e5;
+}
+
+.dropdown-item.logout span {
+    color: #cd1c18;
+    font-weight: 600;
+}
 .modal-overlay {
     position: fixed;
     top: 0;

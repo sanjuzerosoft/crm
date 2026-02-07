@@ -3,26 +3,26 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Auth {
-  // readonly  apiUrl = 'http://127.0.0.1:8000/api';
-  readonly apiUrl = 'https://crm.api.zerosoft.in/api';
+  readonly apiUrl = 'http://127.0.0.1:8000/api';
+  // readonly apiUrl = 'https://crm.api.zerosoft.in/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   register(name: string, email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, {
       name: name,
       email: email,
-      password: password
+      password: password,
     });
   }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, {
       email: email,
-      password: password
+      password: password,
     });
   }
 
@@ -30,21 +30,31 @@ export class Auth {
   saveToken(token: string): void {
     localStorage.setItem('auth_token', token);
     console.log('Auth Token:', localStorage.getItem('auth_token'));
-
+  }
+  saveUserName(name: string): void {
+    localStorage.setItem('user_name', name);
   }
 
+  getUserName(): string | null {
+    return localStorage.getItem('user_name');
+  }
 
   // In your Auth service (services/auth.ts)
   sendPasswordResetOTP(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forgot-password`, { email });
   }
 
-  resetPassword(email: string, otp: string, password: string, password_confirmation: string): Observable<any> {
+  resetPassword(
+    email: string,
+    otp: string,
+    password: string,
+    password_confirmation: string,
+  ): Observable<any> {
     return this.http.post(`${this.apiUrl}/reset-password`, {
       email,
       otp,
       password,
-      password_confirmation
+      password_confirmation,
     });
   }
 
@@ -52,5 +62,4 @@ export class Auth {
   getToken(): string | null {
     return localStorage.getItem('auth_token');
   }
-
 }
