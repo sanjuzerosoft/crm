@@ -5,42 +5,13 @@
       <h1>Add Lead Assignee</h1>
     </div>
 
-    <!-- ACTIONS -->
-    <div class="form-actions">
-      <button type="button" class="red-btn" (click)="goBack()">Back</button>
-
-      <div class="right-actions">
-        <button
-          type="button"
-          class="red-btn"
-          (click)="clearForm()"
-          *ngIf="!assigneeId"
-        >
-          Clear
-        </button>
-
-        <button
-          type="submit"
-          form="leadAssigneeForm"
-          class="red-btn"
-          [disabled]="leadAssigneeForm.invalid"
-        >
-          {{ assigneeId ? 'Update' : 'Save' }}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORM -->
-  <form
-    id="leadAssigneeForm"
-    #leadAssigneeForm="ngForm"
-    (ngSubmit)="assigneeId ? updateAssignee(assigneeId) : saveAssignee()"
-  >
-    <div class="form-layout single-column">
-      <div class="container">
-        <h3 class="card-title">Assignee Details</h3>
-
+    <!-- FORM -->
+    <form
+      id="leadAssigneeForm"
+      #leadAssigneeForm="ngForm"
+      (ngSubmit)="assigneeId ? updateAssignee(assigneeId) : saveAssignee()"
+    >
+      <div class="form-layout two-column">
         <!-- Assignee Name -->
         <div class="form-group">
           <label>Assignee Name</label>
@@ -108,12 +79,7 @@
 
         <div class="form-group">
           <label>Code</label>
-          <input
-            type="text"
-            name="code"
-            [(ngModel)]="assignee.code"
-            placeholder="Code"
-          />
+          <input type="text" name="code" [(ngModel)]="assignee.code" placeholder="Code" />
         </div>
 
         <!-- Status -->
@@ -125,17 +91,29 @@
             <option value="Inactive">Inactive</option>
           </select>
         </div>
+      </div>
+    </form>
 
-        <!-- Description -->
-        <!-- <div class="form-group">
-          <label>Description</label>
-          <textarea
-            name="description"
-            [(ngModel)]="assignee.description"
-            rows="3"
-          ></textarea>
-        </div> -->
+    <!-- FORM ACTIONS -->
+    <div class="form-actions">
+      <div class="left-action">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">← Back</button>
+      </div>
+
+      <div class="right-actions">
+        <button type="button" class="btn btn-outline" (click)="clearForm()" *ngIf="!assigneeId">
+          Clear
+        </button>
+
+        <button
+          type="submit"
+          form="leadAssigneeForm"
+          class="btn btn-primary"
+          [disabled]="leadAssigneeForm.invalid"
+        >
+          {{ assigneeId ? 'Update' : 'Save' }}
+        </button>
       </div>
     </div>
-  </form>
+  </div>
 </div>

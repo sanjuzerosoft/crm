@@ -4,21 +4,7 @@
     <div class="header">
       <h1>Add Customer</h1>
     </div>
-
-    <!-- ACTIONS BELOW HEADER -->
-    <div class="form-actions">
-      <button type="button" class="btn back" (click)="goBack()">Back</button>
-
-      <div class="right-actions">
-        <button type="button" class="btn clear" (click)="clearForm()" *ngIf="!customerId">Clear</button>
-        <button type="submit" form="customerForm" class="btn save" [disabled]="customerForm.invalid">
-          {{ customerId ? 'Update' : 'Save' }}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORM -->
+    <!-- FORM -->
   <form id="customerForm" #customerForm="ngForm" (ngSubmit)="customerId? updateCustomer(customerId): saveCustomer()">
     <!-- TWO COLUMN LAYOUT -->
     <div class="form-layout">
@@ -169,4 +155,19 @@
       </div>
     </div>
   </form>
+
+    <!-- ACTIONS BELOW HEADER -->
+    <div class="form-actions">
+      <button type="button" class="btn back" (click)="goBack()">Back</button>
+
+      <div class="right-actions">
+        <button type="button" class="btn clear" (click)="clearForm()" *ngIf="!customerId">Clear</button>
+        <button type="submit" form="customerForm" class="btn save" [disabled]="customerForm.invalid">
+          {{ customerId ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
 </div>

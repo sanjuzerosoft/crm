@@ -68,6 +68,7 @@ textarea.ng-invalid.ng-touched {
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   align-items: start;
+  margin-bottom: 20px;
 }
 
 /* Container Cards */

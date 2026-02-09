@@ -5,145 +5,136 @@
       <h1>{{ activityId ? 'Edit Activity' : 'Add Activity' }}</h1>
     </div>
 
-    <div class="form-actions">
-      <button type="button" class="red-btn" (click)="goBack()">Back</button>
-
-      <div class="right-actions">
-        <button
-          type="button"
-          class="red-btn"
-          (click)="clearForm()"
-          *ngIf="!activityId"
-        >
-          Clear
-        </button>
-
-        <button
-          type="submit"
-          form="activityForm"
-          class="red-btn"
-          [disabled]="activityForm.invalid"
-        >
-          {{ activityId ? 'Update' : 'Save' }}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORM -->
+    <!-- FORM -->
   <form
     id="activityForm"
     #activityForm="ngForm"
     (ngSubmit)="activityId ? updateActivity(activityId) : saveActivity()"
   >
-    <div class="form-layout single-column">
-      <div class="container">
-        <h3 class="card-title">Activity Details</h3>
+    <div class="form-layout two-column">
 
-        <!-- Type -->
-        <div class="form-group">
-          <label>Type</label>
-          <select name="type" [(ngModel)]="activity.type" required>
-            <option value="">Select Type</option>
-            <option value="mail">Email</option>
-            <option value="call">Call</option>
-            <option value="meeting">Meeting</option>
-            <option value="demo">Demo</option>
-          </select>
-        </div>
+  <!-- Type -->
+  <div class="form-group">
+    <label>Type</label>
+    <select name="type" [(ngModel)]="activity.type" required>
+      <option value="">Select Type</option>
+      <option value="mail">Email</option>
+      <option value="call">Call</option>
+      <option value="meeting">Meeting</option>
+      <option value="demo">Demo</option>
+    </select>
+  </div>
 
-        <!-- Project -->
-        <div class="form-group">
-          <label>Project</label>
-          <select name="project_id" [(ngModel)]="activity.project_id" required>
-            <option value="">Select Project</option>
-            <option *ngFor="let project of projects" [value]="project.id">
-              {{ project.name }}
-            </option>
-          </select>
-        </div>
+  <!-- Project -->
+  <div class="form-group">
+    <label>Project</label>
+    <select name="project_id" [(ngModel)]="activity.project_id" required>
+      <option value="">Select Project</option>
+      <option *ngFor="let project of projects" [value]="project.id">
+        {{ project.name }}
+      </option>
+    </select>
+  </div>
 
-        <!-- Date -->
-        <div class="form-group">
-          <label>Date</label>
-          <input
-            type="date"
-            name="activity_date"
-            [(ngModel)]="activity.activity_date"
-            required
-          />
-        </div>
+  <!-- Date -->
+  <div class="form-group">
+    <label>Date</label>
+    <input type="date" name="activity_date" [(ngModel)]="activity.activity_date" required />
+  </div>
 
-        <!-- Status -->
-        <div class="form-group">
-          <label>Status</label>
-          <select name="status" [(ngModel)]="activity.status" required>
-            <option value="">Select Status</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
+  <!-- Status -->
+  <div class="form-group">
+    <label>Status</label>
+    <select name="status" [(ngModel)]="activity.status" required>
+      <option value="">Select Status</option>
+      <option value="scheduled">Scheduled</option>
+      <option value="completed">Completed</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </div>
 
-        <!-- Lead / Customer Toggle -->
-        <div class="form-group">
-          <label>Related To</label>
-          <div class="radio-group">
-            <label class="radio-card">
-              <input
-                type="radio"
-                name="partyType"
-                value="lead"
-                [(ngModel)]="selectedParty"
-                (change)="onPartyChange('lead')"
-              />
-              <span>Lead</span>
-            </label>
+</div>
 
-            <label class="radio-card">
-              <input
-                type="radio"
-                name="partyType"
-                value="customer"
-                [(ngModel)]="selectedParty"
-                (change)="onPartyChange('customer')"
-              />
-              <span>Customer</span>
-            </label>
-          </div>
-        </div>
+<!-- Related To Full Row -->
+<div class="form-group">
+  <label>Related To</label>
+  <div class="radio-group">
+    <label class="radio-card">
+      <input type="radio" name="partyType" value="lead"
+        [(ngModel)]="selectedParty" (change)="onPartyChange('lead')" />
+      <span>Lead</span>
+    </label>
 
-        <!-- Lead -->
-        <div class="form-group" *ngIf="selectedParty === 'lead'">
-          <label>Lead</label>
-          <select name="lead_id" [(ngModel)]="activity.lead_id" required>
-            <option value="">Select Lead</option>
-            <option *ngFor="let lead of leads" [value]="lead.id">
-              {{ lead.first_name }} {{ lead.last_name }}
-            </option>
-          </select>
-        </div>
+    <label class="radio-card">
+      <input type="radio" name="partyType" value="customer"
+        [(ngModel)]="selectedParty" (change)="onPartyChange('customer')" />
+      <span>Customer</span>
+    </label>
+  </div>
+</div>
 
-        <!-- Customer -->
-        <div class="form-group" *ngIf="selectedParty === 'customer'">
-          <label>Customer</label>
-          <select name="customer_id" [(ngModel)]="activity.customer_id" required>
-            <option value="">Select Customer</option>
-            <option *ngFor="let customer of customers" [value]="customer.id">
-              {{ customer.first_name }} {{ customer.last_name }}
-            </option>
-          </select>
-        </div>
+<!-- Lead -->
+<div class="form-group" *ngIf="selectedParty === 'lead'">
+  <label>Lead</label>
+  <select name="lead_id" [(ngModel)]="activity.lead_id" required>
+    <option value="">Select Lead</option>
+    <option *ngFor="let lead of leads" [value]="lead.id">
+      {{ lead.first_name }} {{ lead.last_name }}
+    </option>
+  </select>
+</div>
 
-        <!-- Description -->
-        <div class="form-group">
-          <label>Description</label>
-          <textarea
-            name="description"
-            [(ngModel)]="activity.description"
-          ></textarea>
-        </div>
-      </div>
-    </div>
+<!-- Customer -->
+<div class="form-group" *ngIf="selectedParty === 'customer'">
+  <label>Customer</label>
+  <select name="customer_id" [(ngModel)]="activity.customer_id" required>
+    <option value="">Select Customer</option>
+    <option *ngFor="let customer of customers" [value]="customer.id">
+      {{ customer.first_name }} {{ customer.last_name }}
+    </option>
+  </select>
+</div>
+
+<!-- Description Full Width -->
+<div class="form-group">
+  <label>Description</label>
+  <textarea name="description" [(ngModel)]="activity.description"></textarea>
+</div>
+
   </form>
+
+    <!-- FORM ACTIONS -->
+<div class="form-actions">
+  <div class="left-action">
+    <button type="button" class="btn btn-secondary" (click)="goBack()">
+      ← Back
+    </button>
+  </div>
+
+  <div class="right-actions">
+    <button
+      type="button"
+      class="btn btn-outline"
+      (click)="clearForm()"
+      *ngIf="!activityId"
+    >
+      Clear
+    </button>
+
+    <button
+      type="submit"
+      form="activityForm"
+      class="btn btn-primary"
+      [disabled]="activityForm.invalid"
+    >
+      {{ activityId ? 'Update' : 'Save' }}
+    </button>
+  </div>
+</div>
+
+
+    
+  </div>
+
+  
 </div>

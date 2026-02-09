@@ -30,7 +30,9 @@ body {
 .header h1 {
   font-size: 22px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 16px;  
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
 }
 
 /* Actions */
@@ -38,6 +40,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 }
 
 .right-actions {
@@ -45,10 +48,14 @@ body {
   gap: 10px;
 }
 
-/* Card */
-.form-layout.single-column {
-  max-width: 720px;
-  margin: 0 auto;
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.two-column .form-group {
+  margin-bottom: 0;
 }
 
 .container {
@@ -116,34 +123,66 @@ textarea.ng-invalid.ng-touched {
 }
 
 /* Buttons (Stylish) */
-.red-btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid #111827;
-  cursor: pointer;
+.btn {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
-.red-btn:hover {
-  background: #111827;
+/* Secondary (Back) */
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+/* Outline (Clear) */
+.btn-outline {
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-outline:hover {
+  background-color: #f9fafb;
+}
+
+/* Primary (Save / Update) */
+.btn-primary {
+  background-color: #cd1c18;
   color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  border: none;
 }
 
-.red-btn:active {
-  transform: translateY(0);
+.btn-primary:hover {
+  background-color: #b01814;
 }
 
 /* Disabled */
-.red-btn[disabled] {
-  opacity: 0.5;
+.btn-primary:disabled {
+  background-color: #fca5a5;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
+/* Right Actions */
+.right-actions {
+  display: flex;
+  gap: 12px;
+}
 /* Mobile */
 @media (max-width: 768px) {
   .wrapper {
@@ -156,15 +195,21 @@ textarea.ng-invalid.ng-touched {
   }
 
   .form-actions {
-    flex-direction: column;
+    flex-direction: column;    
+    align-items: stretch;
     gap: 12px;
   }
-
-  .right-actions {
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+   .right-actions {
+    flex-direction: row;
+  }
+  .red-btn {
     width: 100%;
   }
 
-  .red-btn {
+  .btn {
     width: 100%;
   }
 }

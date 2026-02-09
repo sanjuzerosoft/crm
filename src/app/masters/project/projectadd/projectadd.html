@@ -5,41 +5,13 @@
       <h1>Add Project</h1>
     </div>
 
-    <!-- ACTIONS -->
-    <div class="form-actions">
-      <button type="button" class="red-btn" (click)="goBack()">Back</button>
-
-      <div class="right-actions">
-        <button
-          type="button"
-          class="red-btn"
-          (click)="clearForm()"
-          *ngIf="!projectId"
-        >
-          Clear
-        </button>
-
-        <button
-          type="submit"
-          form="projectForm"
-          class="red-btn"
-          [disabled]="projectForm.invalid"
-        >
-          {{ projectId ? 'Update' : 'Save' }}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FORM -->
+    <!-- FORM -->
   <form
     id="projectForm"
     #projectForm="ngForm"
     (ngSubmit)="projectId ? updateProject(projectId) : saveProject()"
   >
     <div class="form-layout single-column">
-      <div class="container">
-        <h3 class="card-title">Project Details</h3>
 
         <!-- Project Name -->
         <div class="form-group">
@@ -68,7 +40,31 @@
             <option value="Inactive">Inactive</option>
           </select>
         </div>
-      </div>
+      
     </div>
   </form>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <div class="left-action">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">← Back</button>
+      </div>
+
+      <div class="right-actions">
+        <button type="button" class="btn btn-outline" (click)="clearForm()" *ngIf="!projectId">
+          Clear
+        </button>
+
+        <button
+          type="submit"
+          form="projectForm"
+          class="btn btn-primary"
+          [disabled]="projectForm.invalid"
+        >
+          {{ projectId ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  
 </div>
