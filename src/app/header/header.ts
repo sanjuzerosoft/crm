@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { Auth } from '../services/auth';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { SidebarService } from '../services/sidebar.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -10,17 +13,21 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class Header implements OnInit, OnDestroy {
   showProfileModal = false;
   showPasswordModal = false;
   passwordForm: FormGroup;
   userEmail = 'user@example.com'; // Static dummy email
-  
+  userName: string | null = '';
+
   showCurrentPassword = false;
   showNewPassword = false;
   showConfirmPassword = false;
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  isCollapsed = false;
+  private subscription: Subscription = new Subscription();
+
+  constructor(private router: Router, private fb: FormBuilder, private authService: Auth, private sidebarService: SidebarService) {
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [
@@ -30,6 +37,17 @@ export class Header {
       ]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+  }
+  ngOnInit() {
+    this.userName = this.authService.getUserName();
+    console.log("User Name:", this.userName);
+    this.subscription = this.sidebarService.isCollapsed$.subscribe(isCollapsed => {
+      this.isCollapsed = isCollapsed;
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   // Custom validator to check if passwords match
@@ -110,9 +128,14 @@ export class Header {
     }
   }
 
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
+
   logout() {
     this.closeProfileModal();
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     sessionStorage.clear();
     this.router.navigate(['/login']);
   }

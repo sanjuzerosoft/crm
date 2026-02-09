@@ -3,9 +3,20 @@
     <!-- LEFT -->
     <div class="flex items-center gap-4">
       <div class="logo_images">
-        <img src="favicon.png" class="h-6 w-auto cursor-pointer" alt="Logo" routerLink="/dashboard"/>
+        <img
+          src="favicon.png"
+          class="h-6 w-auto cursor-pointer"
+          alt="Logo"
+          routerLink="/dashboard"
+        />
       </div>
       <span class="logo_text">ZeroSoft CRM</span>
+
+      <button (click)="toggleSidebar()" class="toggle-btn" 
+      [title]="isCollapsed ? 'Open Sidebar' : 'Close Sidebar'">
+        <span *ngIf="isCollapsed" class="menu-icon">☰</span>
+        <span *ngIf="!isCollapsed" class="close-icon">✕</span>
+      </button>
     </div>
 
     <!-- RIGHT -->
@@ -40,12 +51,12 @@
               <circle cx="12" cy="7" r="4" />
             </svg>
           </div>
-          <span class="user-text"> Admin!</span>
+          <span class="user-text"> {{ userName ? userName : '-' }}</span>
           <span class="dropdown-icon">▾</span>
         </div>
 
         <!-- PROFILE DROPDOWN -->
-        <div class="profile-dropdown" *ngIf="showProfileModal" >
+        <div class="profile-dropdown" *ngIf="showProfileModal">
           <div class="dropdown-item" (click)="changePassword()">
             <img src="padlock.png" class="dropdown-icon-img" />
             <span>Change Password</span>
