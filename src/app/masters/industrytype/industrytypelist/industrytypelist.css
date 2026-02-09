@@ -212,69 +212,44 @@
 
 .button-container {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;              /* allows wrap on small screens */
-  margin-bottom: 32px;
+  gap: 10px;
+  /* border-bottom: 2px solid #eee; */
+  margin-bottom: 25px;
 }
 
 /* RED BUTTON */
 .red-btn-active {
-  background-color: #cd1c18;    /* red */
-  color: #ffffff;
+  background: transparent;
   border: none;
   padding: 10px 18px;
   font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-weight: 600;
+  color: #cd1c18;
+  border-bottom: 3px solid #cd1c18;
 }
 
+/* Normal Tab */
 .red-btn {
-  background-color: #ffffff;
-  color: #000000;
-  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  padding: 10px 18px;
   font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
   cursor: pointer;
-
-  /* Shadow */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-  /* Smooth animation */
-  transition: 
-    background-color 0.25s ease,
-    color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.15s ease;
+  color: #555;
+  border-bottom: 3px solid transparent;
+  box-shadow: none;
 }
 
-/* Hover effect */
+.red-btn,
+.red-btn-active {
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Hover effect for inactive tabs */
 .red-btn:hover {
-  background-color: #000000;
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-  transform: translateY(-2px);
+  color: #cd1c18;
+  border-bottom: 3px solid #cd1c18;
 }
-
-/* Active (click) effect */
-.red-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* HOVER EFFECT */
-.red-btn:hover {
-  background-color: #FF4D4D;
-  transform: translateY(-1px);
-}
-
-/* ACTIVE CLICK */
-.red-btn:active {
-  transform: translateY(0);
-}
-
 /* MOBILE */
 @media (max-width: 480px) {
   .red-btn {
