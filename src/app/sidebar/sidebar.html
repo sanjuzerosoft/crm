@@ -12,7 +12,7 @@
       routerLink="/dashboard"
       [attr.title]="isCollapsed ? 'Dashboard' : null"
       routerLinkActive="bg-[#cd1c18] text-white"
-      class="flex items-center justify-start  gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+      class="flex items-center justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
     >
       <img src="dashboard.png" class="h-6 w-6" />
       <span [ngClass]="{ hidden: isCollapsed }">Dashboard</span>
@@ -34,7 +34,7 @@
       routerLink="/customers"
       [attr.title]="isCollapsed ? 'Customers' : null"
       routerLinkActive="bg-[#cd1c18] text-white"
-      class="flex items-center justify-start  gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+      class="flex items-center justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
     >
       <img src="customers.png" class="h-6 w-6" />
       <span [ngClass]="{ hidden: isCollapsed }">Customers</span>
@@ -45,24 +45,29 @@
       routerLink="/activity"
       [attr.title]="isCollapsed ? 'Activities' : null"
       routerLinkActive="bg-[#cd1c18] text-white"
-      class="flex items-center justify-start  gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+      class="flex items-center justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
     >
       <img src="activities.png" class="h-6 w-6" />
       <span [ngClass]="{ hidden: isCollapsed }">Activities</span>
     </div>
 
-    <!-- Reports -->
-    <!-- <div
-      routerLink="/report"
-      [attr.title]="isCollapsed ? 'Reports' : null"
+    <!-- Calendar (NEW) -->
+    <div
+      routerLink="/calendar"
+      [attr.title]="isCollapsed ? 'Calendar' : null"
       routerLinkActive="bg-[#cd1c18] text-white"
-      class="flex items-start justify-center lg:justify-center gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
-    > -->
+      class="flex items-center justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+    >
+      <img src="calendar.png" class="h-6 w-6" />
+      <span [ngClass]="{ hidden: isCollapsed }">Calendar</span>
+    </div>
+
+    <!-- Reports -->
     <div
       routerLink="/report"
       [attr.title]="isCollapsed ? 'Reports' : null"
       routerLinkActive="bg-[#cd1c18] text-white"
-      class="flex items-start justify-start  gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
+      class="flex items-start justify-start gap-3 p-3 rounded-full cursor-pointer transition hover:bg-[#FF4D4D] hover:text-white"
     >
       <img src="reports.png" class="h-6 w-6" />
       <span [ngClass]="{ hidden: isCollapsed }">Reports</span>

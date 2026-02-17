@@ -1,0 +1,87 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <h2>Activity Calendar</h2>
+    
+    <div class="toggle-container">
+      <div class="toggle-item">
+        <label class="switch">
+          <input type="checkbox" [(ngModel)]="toggleButtons.call" (change)="toggleFilter('call')">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-label">Call</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch">
+          <input type="checkbox" [(ngModel)]="toggleButtons.meeting" (change)="toggleFilter('meeting')">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-label">Meeting</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch">
+          <input type="checkbox" [(ngModel)]="toggleButtons.demo" (change)="toggleFilter('demo')">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-label">Demo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="calendar-navigation">
+    <button (click)="previousMonth()">← Previous</button>
+    <h3>{{ currentDate | date: 'MMMM yyyy' }}</h3>
+    <button (click)="nextMonth()">Next →</button>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="calendar-weekdays">
+      <div>Sun</div>
+      <div>Mon</div>
+      <div>Tue</div>
+      <div>Wed</div>
+      <div>Thu</div>
+      <div>Fri</div>
+      <div>Sat</div>
+    </div>
+
+    <div class="calendar-days">
+      <div 
+        *ngFor="let day of calendarDays"
+        class="calendar-day"
+        [class.other-month]="!isCurrentMonth(day)"
+        [class.today]="isToday(day)"
+        [class.has-activity]="getActivitiesForDate(day).length > 0"
+        (click)="onDateClick(day)">
+        <div class="day-number">{{ day.getDate() }}</div>
+        <div class="day-activities">
+          <div class="day-activity" *ngIf="getDisplayText(day)">
+            {{ getDisplayText(day) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for both single and multiple activities -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Activities on {{ selectedDate | date: 'MMM dd, yyyy' }}</h3>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div 
+        *ngFor="let activity of selectedActivities" 
+        class="activity-item">
+        <div class="activity-type">
+          {{ getTypeLabel(activity.type) }}
+        </div>
+        <div class="activity-details">
+          <strong>{{ activity.company }}</strong>
+          <span class="activity-time">{{ activity.time }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

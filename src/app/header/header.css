@@ -98,6 +98,238 @@
     justify-content: center;
 }
 
+/* ================= NOTIFICATION DROPDOWN ================= */
+.notification-dropdown {
+    position: absolute;
+    top: 46px;
+    right: 0;
+    width: 380px;
+    max-height: 500px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 1000;
+    animation: dropdownFade 0.2s ease;
+}
+
+@media (max-width: 768px) {
+    .notification-dropdown {
+        width: 340px;
+        right: -20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .notification-dropdown {
+        position: fixed;
+        top: 70px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-height: 70vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .notification-dropdown {
+        top: 65px;
+        right: 5px;
+        left: 5px;
+        max-height: 75vh;
+    }
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 2px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.notification-count {
+    font-size: 12px;
+    color: #666;
+    background: #e3e3e3;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .notification-header {
+        padding: 12px 16px;
+    }
+    
+    .notification-header h3 {
+        font-size: 16px;
+    }
+    
+    .notification-count {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+}
+
+.notification-list {
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+    .notification-list {
+        max-height: calc(75vh - 140px);
+    }
+}
+
+.notification-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-item:hover {
+    background: #f9f9f9;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 640px) {
+    .notification-item {
+        padding: 14px 16px;
+        gap: 12px;
+    }
+}
+
+.notification-company {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.notification-message {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+    .notification-company {
+        font-size: 14px;
+    }
+    
+    .notification-message {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+}
+
+.notification-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.notification-type-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+.notification-type-badge.notification-type-demo {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.notification-type-badge.notification-type-call {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.notification-type-badge.notification-type-meeting {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #999;
+}
+
+@media (max-width: 640px) {
+    .notification-footer {
+        gap: 8px;
+    }
+    
+    .notification-type-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+    
+    .notification-time {
+        font-size: 11px;
+    }
+}
+
+.notification-footer-action {
+    padding: 12px 20px;
+    border-top: 2px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.view-all-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #cd1c18;
+    color: #cd1c18;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-all-btn:hover {
+    background: #cd1c18;
+    color: #ffffff;
+}
+
+@media (max-width: 640px) {
+    .notification-footer-action {
+        padding: 10px 16px;
+    }
+    
+    .view-all-btn {
+        padding: 9px;
+        font-size: 13px;
+    }
+}
+
 /* ================= USER BADGE ================= */
 .user-badge {
     display: flex;
@@ -496,4 +728,124 @@
     background-color: #d1d5db;
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+/* ================= ALL NOTIFICATIONS MODAL ================= */
+.all-notifications-modal {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 85vh;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-out;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+.all-notifications-content {
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.all-notification-item {
+    display: flex;
+    gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.all-notification-item:hover {
+    background: #f9f9f9;
+}
+
+.all-notification-item:last-child {
+    border-bottom: none;
+}
+
+.all-notification-item .notification-content {
+    flex: 1;
+}
+
+.all-notification-item .notification-company {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.all-notification-item .notification-message {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.all-notification-item .notification-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .all-notifications-modal {
+        width: 95%;
+        max-height: 90vh;
+        border-radius: 10px;
+    }
+    
+    .all-notification-item {
+        padding: 16px 20px;
+    }
+    
+    .all-notification-item .notification-company {
+        font-size: 15px;
+    }
+    
+    .all-notification-item .notification-message {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 640px) {
+    .all-notifications-modal {
+        width: 96%;
+        max-height: 92vh;
+        border-radius: 8px;
+    }
+    
+    .all-notification-item {
+        padding: 14px 16px;
+        gap: 12px;
+    }
+    
+    .all-notification-item .notification-company {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .all-notification-item .notification-message {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .all-notification-item .notification-footer {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .all-notifications-modal {
+        width: 98%;
+        max-height: 94vh;
+    }
+    
+    .all-notification-item {
+        padding: 12px 14px;
+    }
 }

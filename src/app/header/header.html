@@ -2,6 +2,12 @@
   <div class="flex items-center justify-between">
     <!-- LEFT -->
     <div class="flex items-center gap-4">
+
+      <button (click)="toggleSidebar()" class="toggle-btn" 
+      [title]="isCollapsed ? 'Open Sidebar' : 'Close Sidebar'">
+        <span  class="menu-icon">☰</span>
+      </button>
+
       <div class="logo_images">
         <img
           src="favicon.png"
@@ -11,12 +17,6 @@
         />
       </div>
       <span class="logo_text">ZeroSoft CRM</span>
-
-      <button (click)="toggleSidebar()" class="toggle-btn" 
-      [title]="isCollapsed ? 'Open Sidebar' : 'Close Sidebar'">
-        <span *ngIf="isCollapsed" class="menu-icon">☰</span>
-        <span *ngIf="!isCollapsed" class="close-icon">✕</span>
-      </button>
     </div>
 
     <!-- RIGHT -->
@@ -24,20 +24,40 @@
       <img src="masters.png" class="header-icon" title="Master" (click)="masters()" />
 
       <div class="relative">
-        <img src="notification.png" class="header-icon" />
-        <span class="notification-dot">3</span>
+        <img src="notification.png" class="header-icon" (click)="toggleNotificationModal()" title="Notifications" />
+        <span class="notification-dot">{{ notifications.length }}</span>
+
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" *ngIf="showNotificationModal">
+          <div class="notification-header">
+            <h3>Notifications</h3>
+            <span class="notification-count">{{ notifications.length }} new</span>
+          </div>
+          
+          <div class="notification-list">
+            <div class="notification-item" *ngFor="let notification of recentNotifications">
+              <div class="notification-content">
+                <div class="notification-company">{{ notification.companyName }}</div>
+                <div class="notification-message">{{ notification.message }}</div>
+                <div class="notification-footer">
+                  <span class="notification-type-badge" [ngClass]="getNotificationTypeClass(notification.type)">
+                    {{ notification.type }}
+                  </span>
+                  <span class="notification-time">{{ notification.time }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="notification-footer-action">
+            <button class="view-all-btn" (click)="openAllNotificationsModal()">View All Notifications</button>
+          </div>
+        </div>
       </div>
 
       <!-- USER BADGE -->
-      <!-- <div class="user-badge" (click)="toggleProfileModal()">
-        <div class="user-avatar">A</div>
-        <span class="user-text">Welcome Admin!</span>
-        <span class="dropdown-icon">▾</span>
-      </div> -->
-      <!-- USER BADGE -->
       <div class="relative">
         <div class="user-badge" (click)="toggleProfileModal()" aria-haspopup="true">
-          <!-- <div class="user-avatar">A</div> -->
           <div class="user-avatar">
             <svg
               viewBox="0 0 24 24"
@@ -51,7 +71,7 @@
               <circle cx="12" cy="7" r="4" />
             </svg>
           </div>
-          <span class="user-text"> {{ userName ? userName : '-' }}</span>
+          <span class="user-text"> {{ userName ? userName : 'Unknown User' }}</span>
           <span class="dropdown-icon">▾</span>
         </div>
 
@@ -74,7 +94,8 @@
   </div>
 </div>
 
-<div class="modal-overlay" *ngIf="showPasswordModal">
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" *ngIf="showPasswordModal" (click)="closePasswordModal()">
   <div class="password-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>Change Password</h3>
@@ -206,6 +227,30 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- ALL NOTIFICATIONS MODAL -->
+<div class="modal-overlay" *ngIf="showAllNotificationsModal" (click)="closeAllNotificationsModal()">
+  <div class="all-notifications-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>All Notifications</h3>
+      <button class="close-btn" (click)="closeAllNotificationsModal()">&times;</button>
+    </div>
+    <div class="all-notifications-content">
+      <div class="all-notification-item" *ngFor="let notification of notifications">
+        <div class="notification-content">
+          <div class="notification-company">{{ notification.companyName }}</div>
+          <div class="notification-message">{{ notification.message }}</div>
+          <div class="notification-footer">
+            <span class="notification-type-badge" [ngClass]="getNotificationTypeClass(notification.type)">
+              {{ notification.type }}
+            </span>
+            <span class="notification-time">{{ notification.time }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

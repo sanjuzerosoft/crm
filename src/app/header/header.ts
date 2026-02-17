@@ -7,6 +7,14 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { SidebarService } from '../services/sidebar.service';
 import { Subscription } from 'rxjs';
 
+interface Notification {
+  id: number;
+  companyName: string;
+  message: string;
+  time: string;
+  type: 'demo' | 'call' | 'meeting';
+}
+
 @Component({
   selector: 'app-header',
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
@@ -16,6 +24,8 @@ import { Subscription } from 'rxjs';
 export class Header implements OnInit, OnDestroy {
   showProfileModal = false;
   showPasswordModal = false;
+  showNotificationModal = false;
+  showAllNotificationsModal = false;
   passwordForm: FormGroup;
   userEmail = 'user@example.com'; // Static dummy email
   userName: string | null = '';
@@ -26,6 +36,71 @@ export class Header implements OnInit, OnDestroy {
 
   isCollapsed = false;
   private subscription: Subscription = new Subscription();
+
+  // Static notifications - 8 total
+  notifications: Notification[] = [
+    {
+      id: 1,
+      companyName: 'Tech Solutions Inc',
+      message: 'Product demo scheduled for new CRM features',
+      time: '10 mins ago',
+      type: 'demo'
+    },
+    {
+      id: 2,
+      companyName: 'Global Enterprises',
+      message: 'Follow-up call regarding Q1 proposal',
+      time: '1 hour ago',
+      type: 'call'
+    },
+    {
+      id: 3,
+      companyName: 'Innovate Corp',
+      message: 'Team meeting to discuss project requirements',
+      time: '2 hours ago',
+      type: 'meeting'
+    },
+    {
+      id: 4,
+      companyName: 'Digital Marketing Ltd',
+      message: 'Demo presentation for analytics dashboard',
+      time: '3 hours ago',
+      type: 'demo'
+    },
+    {
+      id: 5,
+      companyName: 'Startup Hub',
+      message: 'Client call scheduled to discuss partnership opportunities',
+      time: '5 hours ago',
+      type: 'call'
+    },
+    {
+      id: 6,
+      companyName: 'Enterprise Solutions',
+      message: 'Quarterly review meeting with stakeholders',
+      time: '6 hours ago',
+      type: 'meeting'
+    },
+    {
+      id: 7,
+      companyName: 'Cloud Systems Inc',
+      message: 'Product demo for cloud migration services',
+      time: '1 day ago',
+      type: 'demo'
+    },
+    {
+      id: 8,
+      companyName: 'Finance Corp',
+      message: 'Follow-up meeting on budget approval',
+      time: '1 day ago',
+      type: 'meeting'
+    }
+  ];
+
+  // Get only first 3 notifications for dropdown preview
+  get recentNotifications(): Notification[] {
+    return this.notifications.slice(0, 3);
+  }
 
   constructor(private router: Router, private fb: FormBuilder, private authService: Auth, private sidebarService: SidebarService) {
     this.passwordForm = this.fb.group({
@@ -38,6 +113,7 @@ export class Header implements OnInit, OnDestroy {
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
   }
+
   ngOnInit() {
     this.userName = this.authService.getUserName();
     console.log("User Name:", this.userName);
@@ -72,6 +148,36 @@ export class Header implements OnInit, OnDestroy {
 
   closeProfileModal() {
     this.showProfileModal = false;
+  }
+
+  toggleNotificationModal() {
+    this.showNotificationModal = !this.showNotificationModal;
+  }
+
+  closeNotificationModal() {
+    this.showNotificationModal = false;
+  }
+
+  openAllNotificationsModal() {
+    this.showNotificationModal = false;
+    this.showAllNotificationsModal = true;
+  }
+
+  closeAllNotificationsModal() {
+    this.showAllNotificationsModal = false;
+  }
+
+  getNotificationIcon(type: string): string {
+    switch(type) {
+      case 'demo': return '📊';
+      case 'call': return '📞';
+      case 'meeting': return '📅';
+      default: return '🔔';
+    }
+  }
+
+  getNotificationTypeClass(type: string): string {
+    return `notification-type-${type}`;
   }
 
   changeProfile() {

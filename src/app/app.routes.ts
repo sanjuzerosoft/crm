@@ -17,6 +17,10 @@ import { Activityview } from './activity/activityview/activityview';
 // Report
 import { Report } from './report/report';
 
+//Calendar
+import { Calendar } from './calendar/calendar';
+
+
 
 //Masters
 import { Leadassigneelist } from './masters/leadassignee/leadassigneelist/leadassigneelist';
@@ -27,6 +31,7 @@ import { Industrytypeadd } from './masters/industrytype/industrytypeadd/industry
 
 import { Projectlist } from './masters/project/projectlist/projectlist';
 import { Projectadd } from './masters/project/projectadd/projectadd';
+
 
 
 
@@ -55,6 +60,10 @@ export const routes: Routes = [
       {path: 'activity/add', component: Activityadd },
       {path: 'activity/add/:id', component: Activityadd },
       {path: 'activity/view/:id', component: Activityview },
+
+      //Calendar
+      { path: 'calendar', component: Calendar },
+
 
       // Report
       {path: 'report', component: Report },
