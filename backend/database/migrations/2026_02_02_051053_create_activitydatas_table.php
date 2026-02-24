@@ -16,22 +16,26 @@ return new class extends Migration
 
             $table->date('activity_date');
 
-        $table->enum('type', ['call', 'mail', 'meeting', 'demo']);
+            $table->enum('type', ['call', 'mail', 'meeting', 'demo']);
 
-        $table->text('description')->nullable();
+            $table->text('description')->nullable();
 
-        $table->enum('status', ['scheduled', 'completed', 'cancelled'])
-              ->default('scheduled');
+            // Renamed from 'status' — activity type selected by user
+            $table->enum('activity_type', ['demo', 'meeting', 'call', 'email', 'follow_up']);
 
-        // Foreign Keys
-        $table->unsignedBigInteger('lead_id')->nullable();
-        $table->unsignedBigInteger('customer_id')->nullable();
-        $table->unsignedBigInteger('project_id')->nullable();
+            // New scheduled fields — shown when activity_type is selected
+            $table->date('scheduled_date');
+            $table->time('scheduled_time');
 
-        // Relations
-        $table->foreign('lead_id')->references('id')->on('lead_datas')->onDelete('set null');
-        $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
-        $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');
+            // Foreign Keys
+            $table->unsignedBigInteger('lead_id')->nullable();
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
+
+            // Relations
+            $table->foreign('lead_id')->references('id')->on('lead_datas')->onDelete('set null');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');
 
             $table->timestamps();
         });

@@ -11,9 +11,11 @@ class Activitydata extends Model
 
     protected $fillable = [
         'activity_date',
-        'type',
+        // 'type',
         'description',
-        'status',
+        'activity_type',      // renamed from 'status'
+        'scheduled_date',     // new field
+        'scheduled_time',     // new field
         'lead_id',
         'customer_id',
         'project_id',

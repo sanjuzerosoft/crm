@@ -19,7 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://zstcrm.zerosoft.in/'],
+    'allowed_origins' => ['https://zstcrm.zerosoft.in/',
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',],
 
     'allowed_origins_patterns' => [],
 

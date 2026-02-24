@@ -46,13 +46,14 @@ class ActivityDataController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'activity_date' => 'required|date',
-            'type' => 'required|in:call,mail,meeting,demo',
-            'status' => 'required|in:scheduled,completed,cancelled',
+            'scheduled_date' => 'required|date',
+            'scheduled_time' => 'required|date_format:H:i',
             'lead_id' => 'nullable|exists:lead_datas,id',
             'customer_id' => 'nullable|exists:customers,id',
             'project_id' => 'nullable|exists:projects,id',
             'description' => 'nullable|string',
+            
+            
         ]);
 
         $activity = Activitydata::create($request->all());
@@ -82,6 +83,8 @@ class ActivityDataController extends Controller
         // ],
          $activity, 200);
     }
+
+    
 
     public function update(Request $request, $id)
     {
