@@ -87,8 +87,8 @@
           <label>Status</label>
           <select name="status" [(ngModel)]="assignee.status" required>
             <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
           </select>
         </div>
       </div>
@@ -97,7 +97,7 @@
     <!-- FORM ACTIONS -->
     <div class="form-actions">
       <div class="left-action">
-        <button type="button" class="btn btn-secondary" (click)="goBack()">← Back</button>
+        <button type="button" class="btn btn-secondary" (click)="goBack()">Back</button>
       </div>
 
       <div class="right-actions">

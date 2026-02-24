@@ -2,7 +2,7 @@
   <!-- HEADER -->
   <div class="container header-container">
     <div class="header">
-      <h1>Add Lead IndustryType</h1>
+      <h1>Add Industry Type</h1>
     </div>
 
     <!-- FORM -->
@@ -15,7 +15,7 @@
       
         <!-- IndustryType Name -->
         <div class="form-group">
-          <label>IndustryType Name</label>
+          <label>Industry Type</label>
           <input
             type="text"
             name="name"
@@ -36,8 +36,8 @@
           <label>Status</label>
           <select name="status" [(ngModel)]="IndustryType.status" required>
             <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
           </select>
         </div>
      
@@ -47,7 +47,7 @@
     <!-- ACTIONS -->
     <div class="form-actions">
       <div class="left-action">
-        <button type="button" class="btn btn-secondary" (click)="goBack()">← Back</button>
+        <button type="button" class="btn btn-secondary" (click)="goBack()">Back</button>
       </div>
 
       <div class="right-actions">

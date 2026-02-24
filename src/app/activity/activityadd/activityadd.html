@@ -1,140 +1,225 @@
 <div class="wrapper">
-  <!-- HEADER -->
   <div class="container header-container">
     <div class="header">
       <h1>{{ activityId ? 'Edit Activity' : 'Add Activity' }}</h1>
     </div>
 
-    <!-- FORM -->
-  <form
-    id="activityForm"
-    #activityForm="ngForm"
-    (ngSubmit)="activityId ? updateActivity(activityId) : saveActivity()"
-  >
-    <div class="form-layout two-column">
+    <form
+      id="activityForm"
+      #activityForm="ngForm"
+      (ngSubmit)="activityId ? updateActivity(activityId) : saveActivity()"
+    >
 
-  <!-- Type -->
-  <div class="form-group">
-    <label>Type</label>
-    <select name="type" [(ngModel)]="activity.type" required>
-      <option value="">Select Type</option>
-      <option value="mail">Email</option>
-      <option value="call">Call</option>
-      <option value="meeting">Meeting</option>
-      <option value="demo">Demo</option>
-    </select>
-  </div>
+      <!-- ROW 1: Type + Project -->
+      <div class="two-column">
+        <!-- Type -->
+        <!-- <div class="form-group">
+          <label>Type <span class="required">*</span></label>
+          <select
+            name="type"
+            [(ngModel)]="activity.type"
+            required
+            #typeRef="ngModel"
+          >
+            <option value="">Select Type</option>
+            <option value="mail">Email</option>
+            <option value="call">Call</option>
+            <option value="meeting">Meeting</option>
+            <option value="demo">Demo</option>
+          </select>
+          <span class="field-error" *ngIf="typeRef.invalid && typeRef.touched">
+            Type is required.
+          </span>
+        </div> -->
 
-  <!-- Project -->
-  <div class="form-group">
-    <label>Project</label>
-    <select name="project_id" [(ngModel)]="activity.project_id" required>
-      <option value="">Select Project</option>
-      <option *ngFor="let project of projects" [value]="project.id">
-        {{ project.name }}
-      </option>
-    </select>
-  </div>
+        <!-- Project -->
+        <div class="form-group">
+          <label>Project <span class="required">*</span></label>
+          <select
+            name="project_id"
+            [(ngModel)]="activity.project_id"
+            required
+            #projectRef="ngModel"
+          >
+            <option value="">Select Project</option>
+            <option *ngFor="let project of projects" [value]="project.id">
+              {{ project.name }}
+            </option>
+          </select>
+          <span class="field-error" *ngIf="projectRef.invalid && projectRef.touched">
+            Project is required.
+          </span>
+        </div>
 
-  <!-- Date -->
-  <div class="form-group">
-    <label>Date</label>
-    <input type="date" name="activity_date" [(ngModel)]="activity.activity_date" required />
-  </div>
+        <div class="form-group">
+          <label>Activity Type <span class="required">*</span></label>
+          <select
+            name="activity_type"
+            [(ngModel)]="activity.activity_type"
+            required
+            #activityTypeRef="ngModel"
+            (change)="onActivityTypeChange()"
+          >
+            <option value="">Select Type</option>
+            <option value="demo">Demo</option>
+            <option value="meeting">Meeting</option>
+            <option value="call">Call</option>
+          </select>
+          <span class="field-error" *ngIf="activityTypeRef.invalid && activityTypeRef.touched">
+            Activity type is required.
+          </span>
+        </div>    
 
-  <!-- Status -->
-  <div class="form-group">
-    <label>Status</label>
-    <select name="status" [(ngModel)]="activity.status" required>
-      <option value="">Select Status</option>
-      <option value="scheduled">Scheduled</option>
-      <option value="completed">Completed</option>
-      <option value="cancelled">Cancelled</option>
-    </select>
-  </div>
+        
+      </div>
 
-</div>
+      <!-- ROW 2: Date + Activity Type -->
+      <div class="two-column">
+        <!-- Date -->
+        
 
-<!-- Related To Full Row -->
-<div class="form-group">
-  <label>Related To</label>
-  <div class="radio-group">
-    <label class="radio-card">
-      <input type="radio" name="partyType" value="lead"
-        [(ngModel)]="selectedParty" (change)="onPartyChange('lead')" />
-      <span>Lead</span>
-    </label>
+        <!-- Activity Type (renamed from Status) -->
+        
+      </div>
 
-    <label class="radio-card">
-      <input type="radio" name="partyType" value="customer"
-        [(ngModel)]="selectedParty" (change)="onPartyChange('customer')" />
-      <span>Customer</span>
-    </label>
-  </div>
-</div>
+      <!-- ROW 3: Scheduled Date + Scheduled Time (only when activity_type is selected) -->
+      <div class="two-column scheduled-row" *ngIf="activity.activity_type">
+        <!-- Scheduled Date -->
+        <div class="form-group">
+          <label>Scheduled Date <span class="required">*</span></label>
+          <input
+            type="date"
+            name="scheduled_date"
+            [(ngModel)]="activity.scheduled_date"
+            required
+            #scheduledDateRef="ngModel"
+            [min]="activity.activity_date"
+          />
+          <span class="field-error" *ngIf="scheduledDateRef.invalid && scheduledDateRef.touched">
+            Scheduled date is required.
+          </span>
+        </div>
 
-<!-- Lead -->
-<div class="form-group" *ngIf="selectedParty === 'lead'">
-  <label>Lead</label>
-  <select name="lead_id" [(ngModel)]="activity.lead_id" required>
-    <option value="">Select Lead</option>
-    <option *ngFor="let lead of leads" [value]="lead.id">
-      {{ lead.first_name }} {{ lead.last_name }}
-    </option>
-  </select>
-</div>
+        <!-- Scheduled Time -->
+        <div class="form-group">
+          <label>Scheduled Time <span class="required">*</span></label>
+          <input
+            type="time"
+            name="scheduled_time"
+            [(ngModel)]="activity.scheduled_time"
+            required
+            #scheduledTimeRef="ngModel"
+          />
+          <span class="field-error" *ngIf="scheduledTimeRef.invalid && scheduledTimeRef.touched">
+            Scheduled time is required.
+          </span>
+        </div>
+      </div>
 
-<!-- Customer -->
-<div class="form-group" *ngIf="selectedParty === 'customer'">
-  <label>Customer</label>
-  <select name="customer_id" [(ngModel)]="activity.customer_id" required>
-    <option value="">Select Customer</option>
-    <option *ngFor="let customer of customers" [value]="customer.id">
-      {{ customer.first_name }} {{ customer.last_name }}
-    </option>
-  </select>
-</div>
+      <!-- Related To -->
+      <div class="form-group">
+        <label>Related To <span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-card">
+            <input
+              type="radio"
+              name="partyType"
+              value="lead"
+              [(ngModel)]="selectedParty"
+              (change)="onPartyChange('lead')"
+            />
+            <span>Lead</span>
+          </label>
+          <label class="radio-card">
+            <input
+              type="radio"
+              name="partyType"
+              value="customer"
+              [(ngModel)]="selectedParty"
+              (change)="onPartyChange('customer')"
+            />
+            <span>Customer</span>
+          </label>
+        </div>
+      </div>
 
-<!-- Description Full Width -->
-<div class="form-group">
-  <label>Description</label>
-  <textarea name="description" [(ngModel)]="activity.description"></textarea>
-</div>
+      <!-- Lead -->
+      <div class="form-group" *ngIf="selectedParty === 'lead'">
+        <label>Lead <span class="required">*</span></label>
+        <select
+          name="lead_id"
+          [(ngModel)]="activity.lead_id"
+          required
+          #leadRef="ngModel"
+        >
+          <option value="">Select Lead</option>
+          <option *ngFor="let lead of leads" [value]="lead.id">
+            {{ lead.first_name }} {{ lead.last_name }}
+          </option>
+        </select>
+        <span class="field-error" *ngIf="leadRef.invalid && leadRef.touched">
+          Lead is required.
+        </span>
+      </div>
 
-  </form>
+      <!-- Customer -->
+      <div class="form-group" *ngIf="selectedParty === 'customer'">
+        <label>Customer <span class="required">*</span></label>
+        <select
+          name="customer_id"
+          [(ngModel)]="activity.customer_id"
+          required
+          #customerRef="ngModel"
+        >
+          <option value="">Select Customer</option>
+          <option *ngFor="let customer of customers" [value]="customer.id">
+            {{ customer.first_name }} {{ customer.last_name }}
+          </option>
+        </select>
+        <span class="field-error" *ngIf="customerRef.invalid && customerRef.touched">
+          Customer is required.
+        </span>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          name="description"
+          [(ngModel)]="activity.description"
+          rows="4"
+          placeholder="Enter description (optional)"
+        ></textarea>
+      </div>
+
+    </form>
 
     <!-- FORM ACTIONS -->
-<div class="form-actions">
-  <div class="left-action">
-    <button type="button" class="btn btn-secondary" (click)="goBack()">
-      ← Back
-    </button>
+    <div class="form-actions">
+      <div class="left-action">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">
+          Back
+        </button>
+      </div>
+      <div class="right-actions">
+        <button
+          type="button"
+          class="btn btn-outline"
+          (click)="clearForm()"
+          *ngIf="!activityId"
+        >
+          Clear
+        </button>
+        <button
+          type="submit"
+          form="activityForm"
+          class="btn btn-primary"
+          [disabled]="activityForm.invalid"
+        >
+          {{ activityId ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </div>
+
   </div>
-
-  <div class="right-actions">
-    <button
-      type="button"
-      class="btn btn-outline"
-      (click)="clearForm()"
-      *ngIf="!activityId"
-    >
-      Clear
-    </button>
-
-    <button
-      type="submit"
-      form="activityForm"
-      class="btn btn-primary"
-      [disabled]="activityForm.invalid"
-    >
-      {{ activityId ? 'Update' : 'Save' }}
-    </button>
-  </div>
-</div>
-
-
-    
-  </div>
-
-  
 </div>

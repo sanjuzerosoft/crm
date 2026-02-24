@@ -35,25 +35,7 @@ body {
   padding-bottom: 10px;
 }
 
-/* Actions */
-/* .form-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-} */
-
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 20px;
-  margin-top: 24px;
-}
-
-.right-actions {
-  display: flex;
-  gap: 10px;
-}
+/* Two Column Grid */
 .two-column {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -64,12 +46,23 @@ body {
   margin-bottom: 0;
 }
 
-/* Card */
-.form-layout.single-column {
-  max-width: 720px;
-  margin: 0 auto;
+/* Scheduled Row fade-in animation */
+.scheduled-row {
+  animation: fadeSlideIn 0.25s ease;
 }
 
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card */
 .container {
   background: #ffffff;
   padding: 24px;
@@ -77,27 +70,19 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Title */
-.card-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 10px;
-}
-
-/* Form */
+/* Form Group */
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 0;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 }
 
 .form-group label {
   font-size: 13px;
   font-weight: 500;
   margin-bottom: 6px;
+  color: #374151;
 }
 
 .form-group input,
@@ -107,6 +92,14 @@ body {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
+  color: #1f2937;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
 }
 
 .form-group input:focus,
@@ -115,6 +108,27 @@ body {
   outline: none;
   border-color: #cd1c18;
   box-shadow: 0 0 0 3px rgba(205, 28, 24, 0.12);
+}
+
+/* Required asterisk */
+.required {
+  color: #cd1c18;
+  margin-left: 2px;
+}
+
+/* Validation error message */
+.field-error {
+  font-size: 12px;
+  color: #cd1c18;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.field-error::before {
+  content: '⚠';
+  font-size: 11px;
 }
 
 /* Radio Group */
@@ -146,27 +160,22 @@ body {
 .radio-card:has(input:checked) {
   border-color: #cd1c18;
   background: rgba(205, 28, 24, 0.08);
+  color: #cd1c18;
 }
 
-/* Buttons */
-.red-btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid #111827;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  margin-top: 24px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.red-btn:hover {
-  background: #111827;
-  color: #ffffff;
-}
-
-.red-btn[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+.right-actions {
+  display: flex;
+  gap: 12px;
 }
 
 /* Button Base */
@@ -225,30 +234,31 @@ body {
   opacity: 0.7;
 }
 
-/* Right Actions */
-.right-actions {
-  display: flex;
-  gap: 12px;
-}
-
 /* Mobile */
 @media (max-width: 768px) {
+  .wrapper {
+    padding: 16px;
+  }
+
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+
   .form-actions {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
   }
+
   .right-actions {
     flex-direction: row;
   }
+
   .btn {
     width: 100%;
   }
-  .two-column {
-    grid-template-columns: 1fr;
-  }
 
-  .red-btn {
-    width: 100%;
+  .radio-group {
+    flex-direction: row;
   }
 }

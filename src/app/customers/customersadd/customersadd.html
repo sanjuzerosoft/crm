@@ -34,15 +34,7 @@
             <input type="text" name="last_name" [(ngModel)]="customer.last_name" required />
           </div>
 
-          <div class="form-group">
-            <label>customer Assignee</label>
-            <select name="customer_assignee"
-            [(ngModel)]="customer.customer_assignee"
-            required="">
-            <option value="">Select Assignee</option>
-            <option *ngFor="let assignees of assignee" [value]="assignees.id">{{assignees.name}}</option>
-          </select>
-          </div>
+        
 
           <div class="form-group">
             <label>Email</label>

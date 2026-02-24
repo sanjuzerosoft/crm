@@ -25,7 +25,9 @@ export class Activityadd implements OnInit {
     type: '',
     project_id: '',
     activity_date: '',
-    status: '',
+    activity_type: '',
+    scheduled_date: '',
+    scheduled_time: '',
     lead_id: '',
     customer_id: '',
     description: '',
@@ -40,7 +42,7 @@ export class Activityadd implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activityId = Number(this.route.snapshot.paramMap.get('id'));
+    this.activityId = Number(this.route.snapshot.paramMap.get('id')) || null;
 
     if (!this.activityId) {
       this.activity.activity_date = new Date().toISOString().split('T')[0];
@@ -68,7 +70,6 @@ export class Activityadd implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`,
     });
-
     this.http.get<any[]>(`${this.authService.apiUrl}/customers`, { headers })
       .subscribe(data => this.customers = data);
   }
@@ -77,24 +78,35 @@ export class Activityadd implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`,
     });
-
     this.http.get<any[]>(`${this.authService.apiUrl}/leads`, { headers })
       .subscribe(data => this.leads = data);
   }
 
   loadProjects() {
-    this.http.get<any[]>(`${this.authService.apiUrl}/projects`)
-      .subscribe(data => this.projects = data);
-  }
+  this.http.get<any[]>(`${this.authService.apiUrl}/projects`)
+    .subscribe(data => {
+      this.projects = data;
+      this.cdr.detectChanges(); 
+    });
+}
 
   loadActivityForEdit(id: number) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`,
     });
-
     this.http.get<any>(`${this.authService.apiUrl}/activities/${id}`, { headers })
       .subscribe(data => {
-        this.activity = data;
+        this.activity = {
+          type: data.type || '',
+          project_id: data.project_id || '',
+          activity_date: data.activity_date || '',
+          activity_type: data.activity_type || '',
+          scheduled_date: data.scheduled_date || '',
+          scheduled_time: data.scheduled_time || '',
+          lead_id: data.lead_id || '',
+          customer_id: data.customer_id || '',
+          description: data.description || '',
+        };
         this.selectedParty = data.lead_id ? 'lead' : 'customer';
         this.cdr.detectChanges();
       });
@@ -104,7 +116,6 @@ export class Activityadd implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`,
     });
-
     await firstValueFrom(
       this.http.post(`${this.authService.apiUrl}/activities`, this.activity, { headers })
     );
@@ -115,11 +126,18 @@ export class Activityadd implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`,
     });
-
     await firstValueFrom(
       this.http.put(`${this.authService.apiUrl}/activities/${id}`, this.activity, { headers })
     );
     this.router.navigate(['/activity']);
+  }
+
+  onActivityTypeChange() {
+    // Clear scheduled fields when activity type is cleared
+    if (!this.activity.activity_type) {
+      this.activity.scheduled_date = '';
+      this.activity.scheduled_time = '';
+    }
   }
 
   clearForm() {
@@ -127,7 +145,9 @@ export class Activityadd implements OnInit {
       type: '',
       project_id: '',
       activity_date: '',
-      status: '',
+      activity_type: '',
+      scheduled_date: '',
+      scheduled_time: '',
       lead_id: '',
       customer_id: '',
       description: '',

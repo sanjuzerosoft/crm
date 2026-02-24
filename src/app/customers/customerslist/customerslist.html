@@ -1,48 +1,44 @@
 <div class="wrapper">
   <div class="container">
-    <div class="header">
-      <div>
-        <div class="page-title">
-          Customers List - <span class="count" style="color: #cd1c18;">{{ totalcustomers?totalcustomers:"0" }}</span>
-        </div>
-      </div>
 
-      <div>
-        <div class="toolbar">
-          <div class="search-box">
-            <img src="search.png" alt="Search" class="search-icon" />
-            <input 
-            type="text" 
+    <!-- Page Header -->
+    <div class="header">
+      <div class="page-title">
+        Customers - <span class="count">{{ totalcustomers ? totalcustomers : "0" }}</span>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">
+          <img src="search.png" alt="Search" class="search-icon" />
+          <input
+            type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
-            placeholder="Search customers..." />            
-          </div>
-
-          <button class="add-btn" (click)="AddCustomers()">
-            <img src="add.png" alt="Add" class="btn-icon" />
-            Add
-          </button>
+            placeholder="Search customers..."
+          />
         </div>
+        <button class="add-btn" (click)="AddCustomers()">
+          <img src="add.png" alt="Add" class="btn-icon" />
+          Add
+        </button>
       </div>
     </div>
 
+    <!-- Desktop Table -->
     <div class="table-wrapper">
       <table class="customers-table">
         <thead>
           <tr>
             <th>S.No</th>
             <th>Name</th>
-
             <th>Email</th>
             <th>Phone</th>
-            <th>Customer Status</th>
+            <th>Company Name</th>
             <th>Actions</th>
           </tr>
         </thead>
-
         <tbody>
           <tr
-            *ngFor="let customer of customers;let i = index"
+            *ngFor="let customer of customers; let i = index"
             (click)="viewCustomer(customer.id)"
             class="clickable-row"
           >
@@ -51,46 +47,81 @@
             <td>{{ customer.email }}</td>
             <td>{{ customer.mobile }}</td>
             <td>
-              <span
-                class="status"
-                [ngClass]="{
-                  sucess: customer.customer_status === 'active',
-                  danger: customer.customer_status === 'inactive',
-                }"
-                >{{ customer.customer_status }}</span
-              >
+              {{ customer.company_name }}
             </td>
             <td class="actions">
               <img
                 src="edit.png"
                 alt="Edit"
                 class="action-icon"
-                (click)="editCustomer(customer.id)"
+                (click)="editCustomer(customer.id); $event.stopPropagation()"
+                title="Edit"
               />
-
               <img
                 src="delete.png"
                 alt="Delete"
                 class="action-icon delete"
                 (click)="openDeletePopup(customer.id); $event.stopPropagation()"
+                title="Delete"
               />
             </td>
           </tr>
         </tbody>
       </table>
-      <div class="modal-backdrop" *ngIf="showDeletePopup">
-        <div class="modal">
-          <h3>Confirm Delete</h3>
-          <p>Are you sure you want to delete this lead?</p>
+    </div>
 
-          <div class="modal-actions">
-            <button class="btn cancel" (click)="closeDeletePopup()">No</button>
-            <button class="btn delete" (click)="confirmDelete()">Yes</button>
-          </div>
+    <!-- Mobile Cards -->
+    <div class="mobile-cards">
+      <div
+        class="customer-card"
+        *ngFor="let customer of customers; let i = index"
+        (click)="viewCustomer(customer.id)"
+      >
+        <div class="card-top">
+          <span class="card-serial">#{{ i + 1 }}</span>
+          <span
+            class="status"
+            [ngClass]="{
+              sucess: customer.customer_status === 'active',
+              danger: customer.customer_status === 'inactive'
+            }"
+          >{{ customer.customer_status }}</span>
+        </div>
+        <div class="card-name">{{ customer.first_name }}</div>
+        <div class="card-row">
+          <span class="card-label">Email</span>
+          <span class="card-value">{{ customer.email }}</span>
+        </div>
+        <div class="card-row">
+          <span class="card-label">Phone</span>
+          <span class="card-value">{{ customer.mobile }}</span>
+        </div>
+        <div class="card-actions">
+          <button class="card-btn edit" (click)="editCustomer(customer.id); $event.stopPropagation()">
+            <img src="edit.png" class="btn-icon-sm" /> Edit
+          </button>
+          <button class="card-btn del" (click)="openDeletePopup(customer.id); $event.stopPropagation()">
+            <img src="delete.png" class="btn-icon-sm" /> Delete
+          </button>
         </div>
       </div>
     </div>
+
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="showDeletePopup">
+    <div class="modal">
+      <h3>Confirm Delete</h3>
+      <p>Are you sure you want to delete this customer?</p>
+      <div class="modal-actions">
+        <button class="btn cancel" (click)="closeDeletePopup()">No</button>
+        <button class="btn delete" (click)="confirmDelete()">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Loader -->
   <div *ngIf="isLoading" class="page-loader">
     <div class="spinner"></div>
   </div>

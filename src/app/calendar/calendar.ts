@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CalendarService } from '../services/calendar.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Activity {
   id: number;
-  type: 'call' | 'meeting' | 'demo';
+  activity_type: 'call' | 'meeting' | 'demo';
   company: string;
   time: string;
   date: Date;
@@ -17,85 +19,95 @@ interface Activity {
   templateUrl: './calendar.html',
   styleUrl: './calendar.css',
 })
-export class Calendar {
+export class Calendar implements OnInit {
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
   showModal: boolean = false;
   selectedActivities: Activity[] = [];
+  allActivities: Activity[] = [];
+  isLoading: boolean = false;
 
-  toggleButtons = {
+  toggleButtons: Record<'call' | 'meeting' | 'demo', boolean> = {
     call: true,
     meeting: true,
     demo: true
   };
 
-  colorMap = {
+  colorMap: Record<'call' | 'meeting' | 'demo', string> = {
     call: '#4CAF50',
     meeting: '#2196F3',
     demo: '#FF9800'
   };
 
-  // Sample data
-  activities: Activity[] = [
-    { id: 1, type: 'call', company: 'ABC Pvt Ltd', time: '10:00 AM', date: new Date(2026, 1, 5) },
-    { id: 2, type: 'meeting', company: 'XYZ Corp', time: '02:00 PM', date: new Date(2026, 1, 5) },
-    { id: 3, type: 'demo', company: 'Tech Solutions', time: '11:00 AM', date: new Date(2026, 1, 5) },
-    { id: 4, type: 'call', company: 'Global Inc', time: '09:30 AM', date: new Date(2026, 1, 10) },
-    { id: 5, type: 'meeting', company: 'Innovate Ltd', time: '03:00 PM', date: new Date(2026, 1, 12) },
-    { id: 6, type: 'demo', company: 'StartUp Hub', time: '01:00 PM', date: new Date(2026, 1, 15) },
-    { id: 7, type: 'call', company: 'Enterprise Co', time: '10:00 PM', date: new Date(2026, 1, 15) },
-    { id: 8, type: 'meeting', company: 'Business Pro', time: '04:30 PM', date: new Date(2026, 1, 18) },
-    { id: 9, type: 'demo', company: 'Digital Agency', time: '11:30 AM', date: new Date(2026, 1, 20) },
-    { id: 10, type: 'call', company: 'Marketing Plus', time: '02:45 PM', date: new Date(2026, 1, 22) },
-  ];
 
-  get calendarDays(): Date[] {
-    const year = this.currentDate.getFullYear();
-    const month = this.currentDate.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDay.getDay());
-    
-    const days: Date[] = [];
-    const current = new Date(startDate);
-    
-    for (let i = 0; i < 35; i++) {
-      days.push(new Date(current));
-      current.setDate(current.getDate() + 1);
+  constructor(
+  private calendarService: CalendarService,
+  private cd: ChangeDetectorRef
+) {}
+
+  ngOnInit(): void {
+    this.loadActivities();
+  }
+
+  loadActivities(): void {
+  this.isLoading = true;
+
+  this.calendarService.getActivities().subscribe({
+    next: (data) => {
+      this.allActivities = [...data];
+      this.isLoading = false;
+
+      this.cd.detectChanges(); // 🔥 IMPORTANT FIX
+    },
+    error: (err) => {
+      console.error('Error loading activities', err);
+      this.isLoading = false;
     }
-    
-    return days;
+  });
+}
+
+  getActivitiesForDate(date: Date): Activity[] {
+    return this.allActivities.filter(activity => {
+      const activityDate = activity.date instanceof Date
+        ? activity.date
+        : new Date(activity.date);
+
+      const sameDay =
+        activityDate.getFullYear() === date.getFullYear() &&
+        activityDate.getMonth() === date.getMonth() &&
+        activityDate.getDate() === date.getDate();
+
+      const toggleOn = this.toggleButtons[activity.activity_type] ?? false;
+
+      return sameDay && toggleOn;
+    });
   }
 
   toggleFilter(type: 'call' | 'meeting' | 'demo'): void {
-    // No need to manually toggle, ngModel handles it
-    // Just trigger change detection if needed
-  }
-
-  getActivitiesForDate(date: Date): Activity[] {
-    return this.activities.filter(activity => {
-      const activityDate = new Date(activity.date);
-      return this.toggleButtons[activity.type] &&
-             activityDate.getDate() === date.getDate() &&
-             activityDate.getMonth() === date.getMonth() &&
-             activityDate.getFullYear() === date.getFullYear();
-    });
+    if (this.showModal && this.selectedDate) {
+      this.selectedActivities = this.getActivitiesForDate(this.selectedDate);
+      if (this.selectedActivities.length === 0) {
+        this.closeModal();
+      }
+    }
   }
 
   getDisplayText(date: Date): string {
     const activities = this.getActivitiesForDate(date);
     if (activities.length === 0) return '';
     if (activities.length === 1) {
-      return `${activities[0].type.charAt(0).toUpperCase() + activities[0].type.slice(1)}`;
+      return activities[0].activity_type.charAt(0).toUpperCase() + activities[0].activity_type.slice(1);
     }
     return `${activities.length} activities`;
+  }
+
+  getActivityColor(type: 'call' | 'meeting' | 'demo'): string {
+    return this.colorMap[type] || '#607D8B';
   }
 
   onDateClick(date: Date): void {
     const activities = this.getActivitiesForDate(date);
     if (activities.length === 0) return;
-    
     this.selectedDate = date;
     this.selectedActivities = activities;
     this.showModal = true;
@@ -121,12 +133,32 @@ export class Calendar {
 
   isToday(date: Date): boolean {
     const today = new Date();
-    return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
 
   getTypeLabel(type: string): string {
     return type.charAt(0).toUpperCase() + type.slice(1);
+  }
+
+  get calendarDays(): Date[] {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+    const days: Date[] = [];
+    const current = new Date(startDate);
+
+    for (let i = 0; i < 35; i++) {
+      days.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+
+    return days;
   }
 }

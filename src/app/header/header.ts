@@ -3,16 +3,46 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { Auth } from '../services/auth';
+import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { SidebarService } from '../services/sidebar.service';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
-interface Notification {
+// ─── Raw API Response Shape ────────────────────────────────────────────────────
+interface ActivityApiResponse {
+  id: number;
+  activity_date: string;
+  type: string;
+  description: string;
+  activity_type: 'demo' | 'call' | 'meeting';
+  scheduled_date: string;   // "2026-02-26"
+  scheduled_time: string;   // "11:00:00"
+  lead_id: number | null;
+  customer_id: number | null;
+  project_id: number | null;
+  lead: {
+    company_name: string;
+    first_name: string;
+    last_name: string;
+  } | null;
+  customer: {
+    company_name: string;
+    first_name: string;
+    last_name: string;
+  } | null;
+  project: {
+    name: string;
+  } | null;
+}
+
+// ─── Internal Notification Shape ──────────────────────────────────────────────
+export interface Notification {
   id: number;
   companyName: string;
-  message: string;
-  time: string;
+  description: string;
   type: 'demo' | 'call' | 'meeting';
+  scheduledDate: Date;
 }
 
 @Component({
@@ -27,7 +57,7 @@ export class Header implements OnInit, OnDestroy {
   showNotificationModal = false;
   showAllNotificationsModal = false;
   passwordForm: FormGroup;
-  userEmail = 'user@example.com'; // Static dummy email
+  userEmail = 'user@example.com';
   userName: string | null = '';
 
   showCurrentPassword = false;
@@ -36,73 +66,33 @@ export class Header implements OnInit, OnDestroy {
 
   isCollapsed = false;
   private subscription: Subscription = new Subscription();
+  private notificationTimer: any;
 
-  // Static notifications - 8 total
-  notifications: Notification[] = [
-    {
-      id: 1,
-      companyName: 'Tech Solutions Inc',
-      message: 'Product demo scheduled for new CRM features',
-      time: '10 mins ago',
-      type: 'demo'
-    },
-    {
-      id: 2,
-      companyName: 'Global Enterprises',
-      message: 'Follow-up call regarding Q1 proposal',
-      time: '1 hour ago',
-      type: 'call'
-    },
-    {
-      id: 3,
-      companyName: 'Innovate Corp',
-      message: 'Team meeting to discuss project requirements',
-      time: '2 hours ago',
-      type: 'meeting'
-    },
-    {
-      id: 4,
-      companyName: 'Digital Marketing Ltd',
-      message: 'Demo presentation for analytics dashboard',
-      time: '3 hours ago',
-      type: 'demo'
-    },
-    {
-      id: 5,
-      companyName: 'Startup Hub',
-      message: 'Client call scheduled to discuss partnership opportunities',
-      time: '5 hours ago',
-      type: 'call'
-    },
-    {
-      id: 6,
-      companyName: 'Enterprise Solutions',
-      message: 'Quarterly review meeting with stakeholders',
-      time: '6 hours ago',
-      type: 'meeting'
-    },
-    {
-      id: 7,
-      companyName: 'Cloud Systems Inc',
-      message: 'Product demo for cloud migration services',
-      time: '1 day ago',
-      type: 'demo'
-    },
-    {
-      id: 8,
-      companyName: 'Finance Corp',
-      message: 'Follow-up meeting on budget approval',
-      time: '1 day ago',
-      type: 'meeting'
-    }
-  ];
+  // ─── Clear 1 hour AFTER scheduled time ───────────────────────────────────
+  private readonly CLEAR_AFTER_MS = 1 * 60 * 60 * 1000;
 
-  // Get only first 3 notifications for dropdown preview
+  private allNotifications: Notification[] = [];
+  notifications: Notification[] = [];
+
   get recentNotifications(): Notification[] {
     return this.notifications.slice(0, 3);
   }
 
-  constructor(private router: Router, private fb: FormBuilder, private authService: Auth, private sidebarService: SidebarService) {
+  // ─── Static description per activity_type ────────────────────────────────
+  private static readonly DESCRIPTION_MAP: Record<string, string> = {
+    demo: 'A product demo has been scheduled for you.',
+    call: 'A follow-up call has been scheduled.',
+    meeting: 'A meeting has been scheduled with the team.',
+  };
+
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private authService: Auth,
+    private http: HttpClient,
+    private sidebarService: SidebarService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [
@@ -116,59 +106,109 @@ export class Header implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userName = this.authService.getUserName();
-    console.log("User Name:", this.userName);
-    this.subscription = this.sidebarService.isCollapsed$.subscribe(isCollapsed => {
-      this.isCollapsed = isCollapsed;
-    });
+    this.subscription = this.sidebarService.isCollapsed$.subscribe(v => this.isCollapsed = v);
+
+    this.fetchNotifications();
+
+    // Re-filter every minute so expired ones auto-disappear
+    this.notificationTimer = setInterval(() => this.filterNotifications(), 60 * 1000);
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    if (this.notificationTimer) clearInterval(this.notificationTimer);
   }
 
-  // Custom validator to check if passwords match
+  // ─── Fetch from API ───────────────────────────────────────────────────────
+  private fetchNotifications(): void {
+    this.http.get<ActivityApiResponse[]>(`${this.authService.apiUrl}/activities`).subscribe({
+      next: (data) => {
+        this.allNotifications = data.map(item => this.mapToNotification(item));
+        this.filterNotifications();
+
+        this.cdr.detectChanges(); // ✅ FORCE UI REFRESH
+      },
+      error: (err) => console.error('Failed to load notifications:', err)
+    });
+  }
+
+  // ─── Map API response → Notification ─────────────────────────────────────
+  private mapToNotification(item: ActivityApiResponse): Notification {
+    const companyName =
+      item.lead?.company_name ||
+      item.customer?.company_name ||
+      item.project?.name ||
+      'Unknown Company';
+
+    const description =
+      `A ${item.activity_type} has been scheduled. Kindly remember to attend.`;
+
+    // Parse scheduled_date + scheduled_time as LOCAL time (not UTC)
+    // "2026-02-25" + "12:06:00" → local Date object
+    const scheduledDate = new Date(`${item.scheduled_date}T${item.scheduled_time}`);
+
+    return { id: item.id, companyName, description, type: item.activity_type, scheduledDate };
+  }
+
+  // ─── Filter logic ─────────────────────────────────────────────────────────
+  // Show from:  midnight of the PREVIOUS calendar day (day before scheduled date)
+  // Clear at:   1 hour AFTER the scheduled time on the scheduled date
+  private filterNotifications(): void {
+    const now = Date.now();
+
+    this.notifications = this.allNotifications.filter(n => {
+      const scheduled = n.scheduledDate;
+
+      // showFrom = midnight of the day before scheduled date
+      const showFrom = new Date(scheduled);
+      showFrom.setDate(showFrom.getDate() - 1); // go back 1 day
+      showFrom.setHours(0, 0, 0, 0);            // midnight 00:00:00
+
+      // clearAt = scheduled time + 1 hour
+      const clearAt = new Date(scheduled.getTime() + this.CLEAR_AFTER_MS);
+
+      return now >= showFrom.getTime() && now < clearAt.getTime();
+    });
+  }
+
+  // ─── Relative time label ──────────────────────────────────────────────────
+  getTimeLabel(notification: Notification): string {
+    const diffMs = notification.scheduledDate.getTime() - Date.now();
+
+    if (diffMs <= 0) return 'Started / Completed';
+
+    const mins = Math.floor(diffMs / 60000);
+    const hrs = Math.floor(mins / 60);
+    const days = Math.floor(hrs / 24);
+
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} left`;
+    if (hrs > 0) return `${hrs} hr${hrs > 1 ? 's' : ''} left`;
+    return `${mins} min${mins > 1 ? 's' : ''} left`;
+  }
+
+  // ─── Password validator ───────────────────────────────────────────────────
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const newPassword = control.get('newPassword');
-    const confirmPassword = control.get('confirmPassword');
-    
-    if (!newPassword || !confirmPassword) {
-      return null;
-    }
-    
-    return newPassword.value === confirmPassword.value ? null : { passwordMismatch: true };
+    const np = control.get('newPassword');
+    const cp = control.get('confirmPassword');
+    if (!np || !cp) return null;
+    return np.value === cp.value ? null : { passwordMismatch: true };
   }
 
-  masters() {
-    this.router.navigate(['/leadassignee']);
-  }
+  masters() { this.router.navigate(['/leadassignee']); }
 
-  toggleProfileModal() {
-    this.showProfileModal = !this.showProfileModal;
-  }
-
-  closeProfileModal() {
-    this.showProfileModal = false;
-  }
-
-  toggleNotificationModal() {
-    this.showNotificationModal = !this.showNotificationModal;
-  }
-
-  closeNotificationModal() {
-    this.showNotificationModal = false;
-  }
+  toggleProfileModal() { this.showProfileModal = !this.showProfileModal; }
+  closeProfileModal() { this.showProfileModal = false; }
+  toggleNotificationModal() { this.showNotificationModal = !this.showNotificationModal; }
+  closeNotificationModal() { this.showNotificationModal = false; }
 
   openAllNotificationsModal() {
     this.showNotificationModal = false;
     this.showAllNotificationsModal = true;
   }
-
-  closeAllNotificationsModal() {
-    this.showAllNotificationsModal = false;
-  }
+  closeAllNotificationsModal() { this.showAllNotificationsModal = false; }
 
   getNotificationIcon(type: string): string {
-    switch(type) {
+    switch (type) {
       case 'demo': return '📊';
       case 'call': return '📞';
       case 'meeting': return '📅';
@@ -180,15 +220,8 @@ export class Header implements OnInit, OnDestroy {
     return `notification-type-${type}`;
   }
 
-  changeProfile() {
-    this.closeProfileModal();
-    this.router.navigate(['/profile/change-name']);
-  }
-
-  changeProfileImage() {
-    this.closeProfileModal();
-    this.router.navigate(['/profile/change-image']);
-  }
+  changeProfile() { this.closeProfileModal(); this.router.navigate(['/profile/change-name']); }
+  changeProfileImage() { this.closeProfileModal(); this.router.navigate(['/profile/change-image']); }
 
   changePassword() {
     this.closeProfileModal();
@@ -201,42 +234,24 @@ export class Header implements OnInit, OnDestroy {
     this.passwordForm.reset();
   }
 
-  toggleCurrentPassword() {
-    this.showCurrentPassword = !this.showCurrentPassword;
-  }
-
-  toggleNewPassword() {
-    this.showNewPassword = !this.showNewPassword;
-  }
-
-  toggleConfirmPassword() {
-    this.showConfirmPassword = !this.showConfirmPassword;
-  }
+  toggleCurrentPassword() { this.showCurrentPassword = !this.showCurrentPassword; }
+  toggleNewPassword() { this.showNewPassword = !this.showNewPassword; }
+  toggleConfirmPassword() { this.showConfirmPassword = !this.showConfirmPassword; }
 
   onSubmitPassword() {
     if (this.passwordForm.valid) {
-      const formData = this.passwordForm.value;
-      console.log('Password change data:', {
-        currentPassword: formData.currentPassword,
-        newPassword: formData.newPassword
-      });
-      
-      // Here you would typically call your API service to change the password
-      // this.authService.changePassword(formData).subscribe(...)
-      
+      const { currentPassword, newPassword } = this.passwordForm.value;
+      console.log('Password change:', { currentPassword, newPassword });
       alert('Password changed successfully!');
       this.closePasswordModal();
     } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.passwordForm.controls).forEach(key => {
-        this.passwordForm.get(key)?.markAsTouched();
-      });
+      Object.keys(this.passwordForm.controls).forEach(key =>
+        this.passwordForm.get(key)?.markAsTouched()
+      );
     }
   }
 
-  toggleSidebar() {
-    this.sidebarService.toggleSidebar();
-  }
+  toggleSidebar() { this.sidebarService.toggleSidebar(); }
 
   logout() {
     this.closeProfileModal();

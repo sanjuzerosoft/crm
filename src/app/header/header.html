@@ -2,19 +2,12 @@
   <div class="flex items-center justify-between">
     <!-- LEFT -->
     <div class="flex items-center gap-4">
-
-      <button (click)="toggleSidebar()" class="toggle-btn" 
-      [title]="isCollapsed ? 'Open Sidebar' : 'Close Sidebar'">
-        <span  class="menu-icon">☰</span>
+      <button (click)="toggleSidebar()" class="toggle-btn"
+        [title]="isCollapsed ? 'Open Sidebar' : 'Close Sidebar'">
+        <span class="menu-icon">☰</span>
       </button>
-
       <div class="logo_images">
-        <img
-          src="favicon.png"
-          class="h-6 w-auto cursor-pointer"
-          alt="Logo"
-          routerLink="/dashboard"
-        />
+        <img src="favicon.png" class="h-6 w-auto cursor-pointer" alt="Logo" routerLink="/dashboard" />
       </div>
       <span class="logo_text">ZeroSoft CRM</span>
     </div>
@@ -23,9 +16,14 @@
     <div class="flex items-center gap-4">
       <img src="masters.png" class="header-icon" title="Master" (click)="masters()" />
 
+      <!-- NOTIFICATIONS -->
       <div class="relative">
         <img src="notification.png" class="header-icon" (click)="toggleNotificationModal()" title="Notifications" />
-        <span class="notification-dot">{{ notifications.length }}</span>
+
+        <!-- Badge: only visible when there are active notifications -->
+        <span class="notification-dot" *ngIf="notifications.length > 0">
+          {{ notifications.length }}
+        </span>
 
         <!-- NOTIFICATION DROPDOWN -->
         <div class="notification-dropdown" *ngIf="showNotificationModal">
@@ -33,24 +31,37 @@
             <h3>Notifications</h3>
             <span class="notification-count">{{ notifications.length }} new</span>
           </div>
-          
+
           <div class="notification-list">
+            <!-- Empty state -->
+            <div *ngIf="notifications.length === 0"
+              style="padding: 28px 20px; text-align: center; color: #999; font-size: 14px;">
+              No upcoming notifications
+            </div>
+
             <div class="notification-item" *ngFor="let notification of recentNotifications">
               <div class="notification-content">
+                <!-- Dynamic: company name from lead / customer -->
                 <div class="notification-company">{{ notification.companyName }}</div>
-                <div class="notification-message">{{ notification.message }}</div>
+                <!-- Static: based on activity_type -->
+                <div class="notification-message">{{ notification.description }}</div>
                 <div class="notification-footer">
-                  <span class="notification-type-badge" [ngClass]="getNotificationTypeClass(notification.type)">
+                  <!-- Dynamic: activity_type badge -->
+                  <span class="notification-type-badge"
+                    [ngClass]="getNotificationTypeClass(notification.type)">
                     {{ notification.type }}
                   </span>
-                  <span class="notification-time">{{ notification.time }}</span>
+                  <!-- Dynamic: relative time from scheduledDate -->
+                  <span class="notification-time">{{ getTimeLabel(notification) }}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="notification-footer-action">
-            <button class="view-all-btn" (click)="openAllNotificationsModal()">View All Notifications</button>
+          <div class="notification-footer-action" *ngIf="notifications.length > 0">
+            <button class="view-all-btn" (click)="openAllNotificationsModal()">
+              View All Notifications
+            </button>
           </div>
         </div>
       </div>
@@ -59,31 +70,23 @@
       <div class="relative">
         <div class="user-badge" (click)="toggleProfileModal()" aria-haspopup="true">
           <div class="user-avatar">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#cd1c18"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+            <svg viewBox="0 0 24 24" fill="none" stroke="#cd1c18" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
           </div>
-          <span class="user-text"> {{ userName ? userName : 'Unknown User' }}</span>
+          <span class="user-text">{{ userName ? userName : 'Unknown User' }}</span>
           <span class="dropdown-icon">▾</span>
         </div>
 
         <!-- PROFILE DROPDOWN -->
         <div class="profile-dropdown" *ngIf="showProfileModal">
-          <div class="dropdown-item" (click)="changePassword()">
+          <!-- <div class="dropdown-item" (click)="changePassword()">
             <img src="padlock.png" class="dropdown-icon-img" />
             <span>Change Password</span>
-          </div>
-
+          </div> -->
           <div class="dropdown-divider"></div>
-
           <div class="dropdown-item logout" (click)="logout()">
             <img src="exit.png" class="dropdown-icon-img" />
             <span>Logout</span>
@@ -103,128 +106,67 @@
     </div>
     <div class="password-modal-content">
       <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
-        <!-- Email Field (Read-only) -->
         <div class="form-group">
           <label for="email">Email Address</label>
           <input type="email" id="email" class="form-control" [value]="userEmail" readonly />
         </div>
 
-        <!-- Current Password -->
         <div class="form-group">
           <label for="currentPassword">Current Password <span class="required">*</span></label>
           <div class="password-input-wrapper">
-            <input
-              [type]="showCurrentPassword ? 'text' : 'password'"
-              id="currentPassword"
-              class="form-control"
-              formControlName="currentPassword"
-              placeholder="Enter current password"
-            />
+            <input [type]="showCurrentPassword ? 'text' : 'password'" id="currentPassword"
+              class="form-control" formControlName="currentPassword" placeholder="Enter current password" />
             <button type="button" class="toggle-password" (click)="toggleCurrentPassword()">
-              <img
-                [src]="showCurrentPassword ? 'hide.png' : 'show.png'"
-                alt="Toggle password visibility"
-                class="toggle-password-icon"
-              />
+              <img [src]="showCurrentPassword ? 'hide.png' : 'show.png'" alt="Toggle" class="toggle-password-icon" />
             </button>
           </div>
-          <div
-            class="error-message"
-            *ngIf="
-              passwordForm.get('currentPassword')?.invalid &&
-              passwordForm.get('currentPassword')?.touched
-            "
-          >
-            <span *ngIf="passwordForm.get('currentPassword')?.errors?.['required']"
-              >Current password is required</span
-            >
+          <div class="error-message"
+            *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+            <span *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">Current password is required</span>
           </div>
         </div>
 
-        <!-- New Password -->
         <div class="form-group">
           <label for="newPassword">New Password <span class="required">*</span></label>
           <div class="password-input-wrapper">
-            <input
-              [type]="showNewPassword ? 'text' : 'password'"
-              id="newPassword"
-              class="form-control"
-              formControlName="newPassword"
-              placeholder="Enter new password"
-            />
+            <input [type]="showNewPassword ? 'text' : 'password'" id="newPassword"
+              class="form-control" formControlName="newPassword" placeholder="Enter new password" />
             <button type="button" class="toggle-password" (click)="toggleNewPassword()">
-              <img
-                [src]="showNewPassword ? 'hide.png' : 'show.png'"
-                alt="Toggle password visibility"
-                class="toggle-password-icon"
-              />
+              <img [src]="showNewPassword ? 'hide.png' : 'show.png'" alt="Toggle" class="toggle-password-icon" />
             </button>
           </div>
-          <div
-            class="error-message"
-            *ngIf="
-              passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched
-            "
-          >
-            <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']"
-              >New password is required</span
-            >
-            <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']"
-              >Password must be at least 8 characters</span
-            >
-            <span *ngIf="passwordForm.get('newPassword')?.errors?.['pattern']"
-              >Password must contain uppercase, lowercase, number and special character</span
-            >
+          <div class="error-message"
+            *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+            <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</span>
+            <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Password must be at least 8 characters</span>
+            <span *ngIf="passwordForm.get('newPassword')?.errors?.['pattern']">
+              Password must contain uppercase, lowercase, number and special character
+            </span>
           </div>
         </div>
 
-        <!-- Confirm Password -->
         <div class="form-group">
           <label for="confirmPassword">Confirm New Password <span class="required">*</span></label>
           <div class="password-input-wrapper">
-            <input
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              id="confirmPassword"
-              class="form-control"
-              formControlName="confirmPassword"
-              placeholder="Re-enter new password"
-            />
+            <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+              class="form-control" formControlName="confirmPassword" placeholder="Re-enter new password" />
             <button type="button" class="toggle-password" (click)="toggleConfirmPassword()">
-              <img
-                [src]="showConfirmPassword ? 'hide.png' : 'show.png'"
-                alt="Toggle password visibility"
-                class="toggle-password-icon"
-              />
+              <img [src]="showConfirmPassword ? 'hide.png' : 'show.png'" alt="Toggle" class="toggle-password-icon" />
             </button>
           </div>
-          <div
-            class="error-message"
-            *ngIf="
-              passwordForm.get('confirmPassword')?.invalid &&
-              passwordForm.get('confirmPassword')?.touched
-            "
-          >
-            <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']"
-              >Please confirm your password</span
-            >
+          <div class="error-message"
+            *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched">
+            <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
           </div>
-          <div
-            class="error-message"
-            *ngIf="
-              passwordForm.errors?.['passwordMismatch'] &&
-              passwordForm.get('confirmPassword')?.touched
-            "
-          >
+          <div class="error-message"
+            *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
             <span>Passwords do not match</span>
           </div>
         </div>
 
-        <!-- Buttons -->
         <div class="modal-actions">
           <button type="button" class="btn-cancel" (click)="closePasswordModal()">Cancel</button>
-          <button type="submit" class="btn-submit" [disabled]="passwordForm.invalid">
-            Change Password
-          </button>
+          <button type="submit" class="btn-submit" [disabled]="passwordForm.invalid">Change Password</button>
         </div>
       </form>
     </div>
@@ -239,15 +181,24 @@
       <button class="close-btn" (click)="closeAllNotificationsModal()">&times;</button>
     </div>
     <div class="all-notifications-content">
+      <div *ngIf="notifications.length === 0"
+        style="padding: 36px; text-align: center; color: #999; font-size: 15px;">
+        No active notifications at this time.
+      </div>
       <div class="all-notification-item" *ngFor="let notification of notifications">
         <div class="notification-content">
+          <!-- Dynamic: company name -->
           <div class="notification-company">{{ notification.companyName }}</div>
-          <div class="notification-message">{{ notification.message }}</div>
+          <!-- Static: description text -->
+          <div class="notification-message">{{ notification.description }}</div>
           <div class="notification-footer">
-            <span class="notification-type-badge" [ngClass]="getNotificationTypeClass(notification.type)">
+            <!-- Dynamic: activity type badge -->
+            <span class="notification-type-badge"
+              [ngClass]="getNotificationTypeClass(notification.type)">
               {{ notification.type }}
             </span>
-            <span class="notification-time">{{ notification.time }}</span>
+            <!-- Dynamic: relative time -->
+            <span class="notification-time">{{ getTimeLabel(notification) }}</span>
           </div>
         </div>
       </div>

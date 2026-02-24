@@ -10,7 +10,7 @@
       <!-- Page Header -->
       <div>
         <div class="page-title">
-          Industrytype List -
+          Industry Type -
           <span class="count" style="color: #cd1c18;">{{ totalIndustrytypes?totalIndustrytypes:"0" }}</span>
         </div>
       </div>
@@ -22,7 +22,7 @@
             <img src="search.png" alt="Search" class="search-icon" />
             <input
               type="text"
-              placeholder="Search Industrytype..."
+              placeholder="Search type..."
               [(ngModel)]="searchText"
               (input)="onSearch()"
             />
@@ -56,11 +56,11 @@
               <span
                 class="status"
                 [ngClass]="{
-                  sucess: Industrytypes.status === 'Active',
-                  danger: Industrytypes.status === 'Inactive',
+                  sucess: Industrytypes.status == 1,
+                  danger: Industrytypes.status == 0
                 }"
               >
-                {{ Industrytypes.status }}
+                {{ Industrytypes.status ? 'Active' : 'Inactive' }}
               </span>
             </td>
 

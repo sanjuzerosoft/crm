@@ -13,7 +13,7 @@
             <!-- Page Header -->
             <div>
                 <div class="page-title">
-                    Lead Assignee List -
+                    Lead Assignee -
                     <span class="count" style="color: #cd1c18;">{{ totalAssignees?totalAssignees:"0" }}</span>
                 </div>
             </div>
@@ -59,10 +59,10 @@
                         <td>{{ assignee.role }}</td>
                         <td>
                             <span class="status" [ngClass]="{
-                  sucess: assignee.status === 'Active',
-                  danger: assignee.status === 'Inactive'
-                }">
-                                {{ assignee.status }}
+  sucess: assignee.status == 1,
+  danger: assignee.status == 0
+}">
+                               {{ assignee.status == 1 ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
 
